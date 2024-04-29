@@ -4,6 +4,12 @@ project(Tanker)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+if(MSVC)
+    add_compile_options(/MP)
+else()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
+endif()
+
 set(ASIO_INCLUDE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 message(STATUS "ASIO_INCLUDE: ${ASIO_INCLUDE}")
 
@@ -11,7 +17,7 @@ message(STATUS "ASIO_INCLUDE: ${ASIO_INCLUDE}")
 include_directories(include)
 
 #set source directory
-file(GLOB SOURCES "src/*.c")
+file(GLOB SOURCES "src/*.cpp")
 
 #add executable with sources and main.c file
 add_executable(Tanker ${SOURCES} main.cpp)

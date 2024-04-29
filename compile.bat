@@ -9,7 +9,7 @@ if not "%errorlevel%"=="0" (
 )
 
 cd build
-make
+make -j4
 if not "%errorlevel%"=="0" (
     echo "compile the project failed"
     exit /b 1
@@ -17,6 +17,6 @@ if not "%errorlevel%"=="0" (
     echo Info: compile the project success
 )
 
-move Tanker.exe ../
+move Tanker.exe ../ > nul
 cd ..
 Tanker.exe
