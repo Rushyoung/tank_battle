@@ -59,9 +59,4 @@ build/*
 cmake-build-debug/*
 /.vs/*
 /out/build/x64-Debug/*
-
-#assets
-assets/*
-/.vs
-/out/build/x64-Debug
-/cmake-build-debug-mingw/
+*.db
