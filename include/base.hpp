@@ -5,25 +5,33 @@
 #ifndef TANK_BATTLE_BASE_HPP
 #define TANK_BATTLE_BASE_HPP
 #define PI 3.14159265359
-class Position{
+
+
+class baseTank{
 public:
-    Position():x(-1), y(-1){}
-    Position(int x, int y):x(x), y(y){}
+    virtual void move();
     int getX(){return x;}
     int getY(){return y;}
+    double getDegree(){return degree;}
 private:
     int x;
     int y;
+    double degree;
 };
 
-class object{
+class Tank_local : public baseTank{
 public:
-    void virtual move();
-    Position getPos(){return pos;}
-private:
-    Position pos;
-    double degree;
+    void move() override;
+};
 
+class Tank_ai : public baseTank{
+public:
+    void move() override;
+};
+
+class Tank_remote : public baseTank{
+public:
+    void move() override;
 };
 
 
