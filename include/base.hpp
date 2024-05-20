@@ -14,7 +14,8 @@ public:
     int getX(){return x;}
     int getY(){return y;}
     double getDegree(){return degree;}
-private:
+
+protected:
     int x;
     int y;
     double degree;
