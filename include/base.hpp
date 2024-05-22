@@ -3,11 +3,18 @@
 //
 #define MAP_X 2000
 #define MAP_Y 2000
+
+#define SCREEN_WIDTH 1080
+#define SCREEN_LENGTH 1920
+
 #include <cmath>
+#include <graphics.h>
+
 #ifndef TANK_BATTLE_BASE_HPP
 #define TANK_BATTLE_BASE_HPP
 #define PI 3.14159265359
 
+extern MOUSEMSG _mouse;
 struct position{
     int x;
     int y;
@@ -20,39 +27,41 @@ struct position{
 
 class baseTank{
 public:
-    baseTank(int x, int y): pos(x, y){degree = PI/2;}
-    virtual void move(double _degree = 0) = 0;
+    baseTank(int x, int y): pos(x, y){ head_degree = PI / 2;}
+    virtual void control(double _degree = 0) = 0;
     int getX(){return pos.x;}
     int getY(){return pos.y;}
     struct position getPos(){return pos;}
-    double getDegree(){return degree;}
+    double getDegree(){return head_degree;}
 
 protected:
     struct position pos;
-    double degree;
+    double head_degree;
+    double turrent_degree;
+    double speed;
 };
 
 class Tank_local : public baseTank{
 public:
     Tank_local(int x, int y, double speed): baseTank(x, y), speed(speed){}
-    void move(double _degree = 0) override;
+    void control(double _degree = 0) override;
 protected:
     double speed;
 };
 
 class Tank_ai : public baseTank{
 public:
-    void move(double _degree = 0) override;
+    void control(double _degree = 0) override;
 };
 
 class Tank_remote : public baseTank{
 public:
-    void move(double _degree = 0) override;
+    void control(double _degree = 0) override;
 };
 
-class Bullet : public baseTank{
+class Bullet {
 public:
-    void move(double _degree = 0) override;
+
 };
 
 class Collision{

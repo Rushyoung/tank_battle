@@ -48,10 +48,20 @@ public:
         msg->cond.notify_one();
     }
 
-    string receive() {
+    string receive_safe() {
         std::unique_lock<std::mutex> lock(msg->lock);
         msg->cond.wait(lock, [this] { return !msg->messages.empty(); });
-        string message = msg->messages.front();
+        std::string message = msg->messages.front();
+        msg->messages.pop();
+        return message;
+    }
+
+    string receive() {
+        std::lock_guard<std::mutex> lock(msg->lock);
+        if (msg->messages.empty()) {
+            return "";
+        }
+        std::string message = msg->messages.front();
         msg->messages.pop();
         return message;
     }
