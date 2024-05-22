@@ -27,7 +27,7 @@ struct position{
 
 class baseTank{
 public:
-    baseTank(int x, int y): pos(x, y){ head_degree = PI / 2;}
+    baseTank(int x, int y): pos(x, y){ head_degree = 90;}
     virtual void control(double _degree = 0) = 0;
     int getX(){return pos.x;}
     int getY(){return pos.y;}
