@@ -18,10 +18,13 @@ int random(int min, int max) {
 }
 #ifndef TANK_BATTLE_BASE_HPP
 #define TANK_BATTLE_BASE_HPP
+#define Radians(x) ((x)*PI/180.0)
+#define Degree(x) ((x)*180/PI)
 #define PI 3.14159265359
 #define millisecond(x) std::chrono::milliseconds(x)
 #define FLASH_TIME 33
-#define FRAME_TIME
+#define FRAME_TIME 10
+#define BULLET_LENGTH 10
 
 extern MOUSEMSG _mouse;
 struct position{
@@ -58,6 +61,7 @@ public:
         double real_distance = center_distance - other.edge(0) - edge(0);//temp
         return real_distance < 0;
     }
+    int getLength(){return length;}
 private:
     //时间缘故，先只做圆形碰撞箱
     struct position pos;
@@ -70,25 +74,34 @@ private:
 
 class baseTank{
 public:
-    baseTank(int x, int y, int length): pos(x, y), col(x, y, length){ head_degree = 90; enable = true; turrent_degree = 90;}
+    /*
+     * @x:逻辑x坐标（地图）
+     * @y:逻辑y坐标（地图）
+     * @length:圆形碰撞箱半径
+     * @base_image:tank的模型图片
+     * */
+    baseTank(int x, int y, int length, IMAGE& base_image): pos(x, y), col(x, y, length), base_img(base_image){ head_degree = 90; enable = true; turret_degree = 90;}
     virtual void control(double _degree = 0) = 0;
     int getX(){return pos.x;}
     int getY(){return pos.y;}
+    int getLength(){return col.getLength();}
     struct position getPos(){return pos;}
     double getDegree(){return head_degree;}
-
+    double getTurrent_degree(){return turret_degree;}
+    void broken();
 protected:
     struct position pos;
     Collision col;
     double head_degree;
-    double turrent_degree;
+    double turret_degree;
     double speed;
     bool enable;
+    IMAGE& base_img;
 };
 
 class Tank_local : public baseTank{
 public:
-    Tank_local(int x, int y, double speed, int length): baseTank(x, y, length), speed(speed){}
+    Tank_local(int x, int y, double speed, int length, IMAGE& image): baseTank(x, y, length, image), speed(speed){}
     void control(double _degree = 0) override;
 protected:
     double speed;
@@ -106,7 +119,15 @@ public:
 
 class Bullet {
 public:
-
+    Bullet(baseTank* tank):pos(tank->getPos()), degree(tank->getDegree()),
+    col(tank->getX() + tank->getLength() * cos(Radians(tank->getTurrent_degree())),
+        tank->getY() + tank->getLength() * sin(Radians(tank->getTurrent_degree())),
+        tank->getTurrent_degree()){}
+    void move();
+private:
+    struct position pos;
+    double degree;
+    Collision col;
 };
 
 
