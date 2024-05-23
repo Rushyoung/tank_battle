@@ -29,7 +29,7 @@
 //    std::function<void(const asio::error_code&, asio::ip::tcp::socket)> accept_handler;
 //    accept_handler = [&](const asio::error_code& error, asio::ip::tcp::socket socket) {
 //        if (!error) {
-//            echo(std::make_shared<asio::ip::tcp::socket>(std::move(socket)));
+//            echo(std::make_shared<asio::ip::tcp::socket>(std::control(socket)));
 //        }
 //        acceptor.async_accept(accept_handler);
 //    };

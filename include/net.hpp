@@ -9,7 +9,7 @@
 #ifndef TANK_BATTLE_NET_HPP
 
 class udp_server{
-public:K
+public:
     void run();
     udp_server():_port(0){}
     explicit udp_server(int port):_port(port){}
@@ -26,6 +26,7 @@ public:
 private:
     std::string _host;
     int _port;
+    std::chrono::milliseconds
 };
 auto unix_time_stamp();
 #define TANK_BATTLE_NET_HPP
