@@ -8,7 +8,6 @@ add_executable(tank_battle temp.cpp
         src/base.cpp
         include/base.hpp
         include/net.hpp
-        src/net.cpp
         include/chanel.hpp
         main.cpp)
 if(WIN32)

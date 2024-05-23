@@ -17,10 +17,17 @@ using std::map;
 using std::queue;
 using std::string;
 
+struct Tank_info{
+    struct position pos;
+    double head_degree;
+    double turrent_degree;
+    bool enable;
+};
+
 struct chan_message {
     std::mutex lock;
     std::condition_variable cond;
-    std::queue<string> messages;
+    std::queue<string> messages;//wait
     chan_message() { cout << "chan_message created\n"; }
 };
 
@@ -41,7 +48,7 @@ public:
             msg = it->second;
         }
     }
-
+    //wait
     void send(const string& message) {
         std::lock_guard<std::mutex> lock(msg->lock);
         msg->messages.push(message);

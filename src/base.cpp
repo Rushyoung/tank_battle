@@ -3,14 +3,15 @@
 //
 #include "../include/base.hpp"
 #define ROTATE_SPEED 0.1
-#define Radians(x) {(x)*PI/180.0}
+#define Radians(x) ((x)*PI/180.0)
+#define Degree(x) ((x)*180/PI)
 void Tank_local::control(double _degree) {
     while(true){
         if(!enable){return;}
         _mouse = GetMouseMsg();
         switch(_mouse.uMsg){
             case WM_MOUSEMOVE:
-                turrent_degree = atan2(_mouse.y - pos.y, _mouse.x - pos.x);
+                turrent_degree = Degree(atan2(_mouse.y - pos.y, _mouse.x - pos.x));
         }
         //move forward
         {
