@@ -67,10 +67,10 @@ public:
     }
 };
 
-int main() {
-    chan("test").send("Hello");
-    cout << chan("test").receive() << "\n";
-    return 0;
-}
+//int main() {
+//    chan("test").send("Hello");
+//    cout << chan("test").receive() << "\n";
+//    return 0;
+//}
 
 #endif //TANK_BATTLE_CHANEL_HPP

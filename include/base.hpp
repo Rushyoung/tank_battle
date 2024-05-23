@@ -9,7 +9,13 @@
 
 #include <cmath>
 #include <graphics.h>
-
+#include <random>
+int random(int min, int max) {
+    std::random_device rd;
+    std::default_random_engine gen(rd());
+    std::uniform_int_distribution<int> dis(min, max);
+    return dis(gen);
+}
 #ifndef TANK_BATTLE_BASE_HPP
 #define TANK_BATTLE_BASE_HPP
 #define PI 3.14159265359
@@ -64,7 +70,7 @@ private:
 
 class baseTank{
 public:
-    baseTank(int x, int y, int length): pos(x, y), col(x, y, length){ head_degree = 90; enable = true;}
+    baseTank(int x, int y, int length): pos(x, y), col(x, y, length){ head_degree = 90; enable = true; turrent_degree = 90;}
     virtual void control(double _degree = 0) = 0;
     int getX(){return pos.x;}
     int getY(){return pos.y;}
