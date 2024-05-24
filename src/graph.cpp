@@ -18,8 +18,8 @@ void rotate_draw_mask(IMAGE* img, IMAGE* mask, double angle, int centerX, int ce
     setorigin(centerX, centerY);
 
     // 旋转图像和掩码
-    rotateimage(img, img, angle, BLACK);
-    rotateimage(mask, mask, angle, WHITE);
+    rotateimage(img, img, Radians(angle), BLACK);
+    rotateimage(mask, mask, Radians(angle), WHITE);
 
     // 使用 SRCAND ROP 代码将旋转后的掩码图像绘制到屏幕上
     putimage(-imgCenterX, -imgCenterY, mask, SRCAND);
@@ -65,18 +65,22 @@ struct position map_convert_screen(position& base, position& origin){
 }
 
 void draw_tank(IMAGE* body, IMAGE* body_mask, IMAGE* turret, IMAGE* turret_mask,double head_degree, double turret_degree,int center_x, int center_y,int turretOffsetX, int turretOffsetY){
+    // 计算新的炮塔偏移量
     int newOffsetX = turretOffsetX * cos(Radians(head_degree)) - turretOffsetY * sin(Radians(head_degree));
     int newOffsetY = turretOffsetX * sin(Radians(head_degree)) + turretOffsetY * cos(Radians(head_degree));
-    rotate_draw_mask(body, body_mask, head_degree, center_x, center_y);
-    rotate_draw_mask(turret, turret_mask, turret_degree, center_x+newOffsetX, center_y+newOffsetY);
-}
 
+    // 将 body 和 turret 绘制到屏幕上
+    rotate_draw_mask(body, body_mask, head_degree, center_x, center_y);
+//    rotate_draw_mask(turret, turret_mask, turret_degree, center_x+newOffsetX, center_y+newOffsetY);
+}
 void tank_turret(IMAGE* original, IMAGE* body, IMAGE* turret,
                  position body_pos, position turret_pos,
                  int bodyWidth, int turretWidth) {
     int bodyHeight = bodyWidth;
     int turretHeight = turretWidth;
     // 从 original 中裁剪出 body 和 turret 的图像
+    SetWorkingImage(original);
     getimage(body, body_pos.x, body_pos.y, bodyWidth, bodyHeight);
     getimage(turret, turret_pos.x, turret_pos.y, turretWidth, turretHeight);
+    SetWorkingImage(NULL);
 }

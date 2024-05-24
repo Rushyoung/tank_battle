@@ -3,6 +3,7 @@
 #include <functional>
 #include <string>
 #include <vector>
+#include <iostream>
 
 using namespace std;
 
@@ -37,12 +38,35 @@ struct tank_data
                 turret_width=90;
                 turret_center_x=125;
                 turret_center_y=174;
-                loadimage(&original,"source/tank/churchill.png");
-                loadimage(&original_mask,"source/tank/churchill_mask.png");
+                loadimage(&original,"../source/tank/churchill.png");
+                loadimage(&original_mask,"../source/tank/churchill_mask.png");
+//                cout << body.getwidth() << endl;
                 body = IMAGE(body_width,body_width);
+//                cout << body.getwidth() << endl;
                 body_mask = IMAGE(body_width,body_width);
                 turret = IMAGE(turret_width,turret_width);
                 turret_mask = IMAGE(turret_width,turret_width);
+                //test
+                std::cerr << "load";
+                if (original.getwidth() == 0 || original.getheight() == 0) {
+                    std::cerr << "Failed to load image for original tank." << std::endl;
+                }
+                if (original_mask.getwidth() == 0 || original_mask.getheight() == 0) {
+                    std::cerr << "Failed to load image for original tank mask." << std::endl;
+                }
+                if (body.getwidth() == 0 || body.getheight() == 0) {
+                    std::cerr << "Failed to load image for tank body." << std::endl;
+                }
+                if (body_mask.getwidth() == 0 || body_mask.getheight() == 0) {
+                    std::cerr << "Failed to load image for tank body mask." << std::endl;
+                }
+                if (turret.getwidth() == 0 || turret.getheight() == 0) {
+                    std::cerr << "Failed to load image for tank turret." << std::endl;
+                }
+                if (turret_mask.getwidth() == 0 || turret_mask.getheight() == 0) {
+                    std::cerr << "Failed to load image for tank turret mask." << std::endl;
+                }
+
                 break;
             case is2:
                 offsite=12;
@@ -54,8 +78,8 @@ struct tank_data
                 turret_width=140;
                 turret_center_x=141;
                 turret_center_y=176;
-                loadimage(&original,"source/tank/is2.png");
-                loadimage(&original_mask,"source/tank/is2_mask.png");
+                loadimage(&original,"../source/tank/is2.png");
+                loadimage(&original_mask,"../source/tank/is2_mask.png");
                 body = IMAGE(body_width,body_width);
                 body_mask = IMAGE(body_width,body_width);
                 turret = IMAGE(turret_width,turret_width);
@@ -71,8 +95,8 @@ struct tank_data
                 turret_width=111;
                 turret_center_x=124;
                 turret_center_y=175;
-                loadimage(&original,"source/tank/sherman.png");
-                loadimage(&original_mask,"source/tank/sherman_mask.png");
+                loadimage(&original,"../source/tank/sherman.png");
+                loadimage(&original_mask,"../source/tank/sherman_mask.png");
                 body = IMAGE(body_width,body_width);
                 body_mask = IMAGE(body_width,body_width);
                 turret = IMAGE(turret_width,turret_width);
@@ -88,8 +112,8 @@ struct tank_data
                 turret_width=146;
                 turret_center_x=140;
                 turret_center_y=177;
-                loadimage(&original,"source/tank/t34_85.png");
-                loadimage(&original_mask,"source/tank/t34_85_mask.png");
+                loadimage(&original,"../source/tank/t34_85.png");
+                loadimage(&original_mask,"../source/tank/t34_85_mask.png");
                 body = IMAGE(body_width,body_width);
                 body_mask = IMAGE(body_width,body_width);
                 turret = IMAGE(turret_width,turret_width);
@@ -105,8 +129,8 @@ struct tank_data
                 turret_width=116;
                 turret_center_x=127;
                 turret_center_y=176;
-                loadimage(&original,"source/tank/tiger.png");
-                loadimage(&original_mask,"source/tank/tiger_mask.png");
+                loadimage(&original,"../source/tank/tiger.png");
+                loadimage(&original_mask,"../source/tank/tiger_mask.png");
                 body = IMAGE(body_width,body_width);
                 body_mask = IMAGE(body_width,body_width);
                 turret = IMAGE(turret_width,turret_width);
@@ -603,11 +627,11 @@ public:
     }
 };
 
-int main()
-{
-    Widget widget(800, 600);
-    widget.init();
-    widget.run();
-    widget.close();
-    return 0;
-}
+//int ui_main()
+//{
+//    Widget widget(800, 600);
+//    widget.init();
+//    widget.run();
+//    widget.close();
+//    return 0;
+//}
