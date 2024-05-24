@@ -54,7 +54,7 @@ void udp_client::send(std::string _stream) {
     }
 }
 
-auto unix_time_stamp(){
+long long int unix_time_stamp(){
     auto now = std::chrono::system_clock::now();
     auto now_ms = std::chrono::time_point_cast<std::chrono::milliseconds>(now);
     auto epoch = now_ms.time_since_epoch();
