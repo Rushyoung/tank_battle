@@ -9,7 +9,7 @@
  * @centerX:屏幕坐标系
  * @centerY:屏幕坐标系
  * */
-void rotate_draw_mask(IMAGE* img, IMAGE* mask, double angle, int centerX, int centerY) {
+void rotate_draw(IMAGE* img, hiex::Canvas* canvas, double angle, int centerX, int centerY) {
     // 计算图像的中心点
     int imgCenterX = img->getwidth() / 2;
     int imgCenterY = img->getheight() / 2;
@@ -70,8 +70,8 @@ void draw_tank(IMAGE* body, IMAGE* body_mask, IMAGE* turret, IMAGE* turret_mask,
     int newOffsetY = turretOffsetX * sin(Radians(head_degree)) + turretOffsetY * cos(Radians(head_degree));
 
     // 将 body 和 turret 绘制到屏幕上
-    rotate_draw_mask(body, body_mask, head_degree, center_x, center_y);
-    rotate_draw_mask(turret, turret_mask, turret_degree, center_x+newOffsetX, center_y+newOffsetY);
+//    rotate_draw(body, body_mask, head_degree, center_x, center_y);
+//    rotate_draw(turret, turret_mask, turret_degree, center_x+newOffsetX, center_y+newOffsetY);
 }
 void tank_turret(IMAGE* original, IMAGE* body, IMAGE* turret,
                  position body_pos, position turret_pos,

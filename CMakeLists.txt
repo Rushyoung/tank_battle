@@ -6,17 +6,17 @@ set(CMAKE_CXX_STANDARD 17)
 add_definitions(-D_WIN32_WINNT=0x0601)
 file(GLOB_RECURSE HIEASYX_SRC "HiEasyX/*.cpp")
 add_executable(tank_battle
-        src/base.cpp
-        include/base.hpp
-        include/net.hpp
-        include/chanel.hpp
+#        src/base.cpp
+#        include/base.hpp
+#        include/net.hpp
+#        include/chanel.hpp
         main.cpp
-        include/grap.hpp
-        src/graph.cpp
-        include/basetype.hpp
-        src/net.cpp
-        src/basetype.cpp
-        src/ui.cpp
+#        include/grap.hpp
+#        src/graph.cpp
+#        include/basetype.hpp
+#        src/net.cpp
+#        src/basetype.cpp
+#        src/ui.cpp
         HiEasyX.h
         ${HIEASYX_SRC}
 )

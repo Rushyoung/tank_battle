@@ -24,9 +24,7 @@ struct tank_data
     hiex::Canvas body;
     hiex::Canvas turret;
     hiex::Canvas original;
-    hiex::Canvas body_mask;
-    hiex::Canvas turret_mask;
-    hiex::Canvas original_mask;
+
     tank_data(enum tank_type type){
         switch (type) {
             case churchil:
@@ -40,33 +38,25 @@ struct tank_data
                 turret_center_x=125;
                 turret_center_y=174;
                 original.Load_Image_Alpha("../source/tank/churchill.png");
-                original_mask.Load_Image_Alpha("../source/tank/churchill_mask.png");
 //                cout << body.getwidth() << endl;
                 body = hiex::Canvas(body_width,body_width,BLACK);
 //                cout << body.getwidth() << endl;
-                body_mask = hiex::Canvas(body_width,body_width);
+                hiex::Canvas(body_width, body_width);
                 turret = hiex::Canvas(turret_width,turret_width);
-                turret_mask = hiex::Canvas(turret_width,turret_width);
+                hiex::Canvas(turret_width, turret_width);
                 //test
                 std::cerr << "load";
                 if (original.getwidth() == 0 || original.getheight() == 0) {
                     std::cerr << "Failed to load image for original tank." << std::endl;
                 }
-                if (original_mask.getwidth() == 0 || original_mask.getheight() == 0) {
-                    std::cerr << "Failed to load image for original tank mask." << std::endl;
-                }
+
                 if (body.getwidth() == 0 || body.getheight() == 0) {
                     std::cerr << "Failed to load image for tank body." << std::endl;
-                }
-                if (body_mask.getwidth() == 0 || body_mask.getheight() == 0) {
-                    std::cerr << "Failed to load image for tank body mask." << std::endl;
                 }
                 if (turret.getwidth() == 0 || turret.getheight() == 0) {
                     std::cerr << "Failed to load image for tank turret." << std::endl;
                 }
-                if (turret_mask.getwidth() == 0 || turret_mask.getheight() == 0) {
-                    std::cerr << "Failed to load image for tank turret mask." << std::endl;
-                }
+
 
                 break;
             case is2:
@@ -80,11 +70,8 @@ struct tank_data
                 turret_center_x=141;
                 turret_center_y=176;
                 original.Load_Image_Alpha("../source/tank/is2.png");
-                original_mask.Load_Image_Alpha("../source/tank/is2_mask.png");
                 body = hiex::Canvas(body_width,body_width);
-                body_mask = hiex::Canvas(body_width,body_width);
                 turret = hiex::Canvas(turret_width,turret_width);
-                turret_mask = hiex::Canvas(turret_width,turret_width);
                 break;
             case sherman:
                 offsite=2;
@@ -97,11 +84,8 @@ struct tank_data
                 turret_center_x=124;
                 turret_center_y=175;
                 original.Load_Image_Alpha("../source/tank/sherman.png");
-                original_mask.Load_Image_Alpha("../source/tank/sherman_mask.png");
                 body = hiex::Canvas(body_width,body_width);
-                body_mask = hiex::Canvas(body_width,body_width);
                 turret = hiex::Canvas(turret_width,turret_width);
-                turret_mask = hiex::Canvas(turret_width,turret_width);
                 break;
             case t34_85:
                 offsite=10;
@@ -114,11 +98,8 @@ struct tank_data
                 turret_center_x=140;
                 turret_center_y=177;
                 original.Load_Image_Alpha("../source/tank/t34_85.png");
-                original_mask.Load_Image_Alpha("../source/tank/t34_85_mask.png");
                 body = hiex::Canvas(body_width,body_width);
-                body_mask = hiex::Canvas(body_width,body_width);
                 turret = hiex::Canvas(turret_width,turret_width);
-                turret_mask = hiex::Canvas(turret_width,turret_width);
                 break;
             case tiger:
                 offsite=2;
@@ -131,11 +112,8 @@ struct tank_data
                 turret_center_x=127;
                 turret_center_y=176;
                 original.Load_Image_Alpha("../source/tank/tiger.png");
-                original_mask.Load_Image_Alpha("../source/tank/tiger_mask.png");
                 body = hiex::Canvas(body_width,body_width);
-                body_mask = hiex::Canvas(body_width,body_width);
                 turret = hiex::Canvas(turret_width,turret_width);
-                turret_mask = hiex::Canvas(turret_width,turret_width);
                 break;
         }
     };
@@ -628,11 +606,11 @@ public:
     }
 };
 
-int _main()
-{
-    Widget widget(800, 600);
-    widget.init();
-    widget.run();
-    widget.close();
-    return 0;
-}
+//int ui_main()
+//{
+//    Widget widget(800, 600);
+//    widget.init();
+//    widget.run();
+//    widget.close();
+//    return 0;
+//}
