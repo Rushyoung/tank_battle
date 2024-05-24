@@ -45,6 +45,7 @@ void render(){
     local = chan("local").receive();
     //render begin
     BeginBatchDraw();
+    cleardevice();
 
 
 

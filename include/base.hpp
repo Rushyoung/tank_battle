@@ -9,10 +9,12 @@
 
 #include "basetype.hpp"
 #include "chanel.hpp"
+#include "net.hpp"
 #ifndef TANK_BATTLE_BASE_HPP
 #define TANK_BATTLE_BASE_HPP
 #define AI_AMOUNT 20
 #define REMOTE_MAX 2
+#define BULLET_SPEED 5
 
 
 //extern int ai_amount;
@@ -23,12 +25,12 @@ class Collision{
 public:
     Collision(int x, int y, int length, double angle = 0): pos(x, y), length(length), angle(angle){}
     double edge(double _angele){
-//        if(type == 'C'){
-//            return length;
-//        }
-//        else if(type == 'S'){
-//
-//        }
+        if(type == 'C'){
+            return length;
+        }
+        else if(type == 'S'){
+            return width/(2*sin(_angele+angle));
+        }
         return length;
     }
     void update_pos(int x, int y){
@@ -38,17 +40,18 @@ public:
     /*
      * @return:碰撞1，没碰0
      * */
-    bool is_coincide(Collision other){
-        double center_distance = distance(other.pos, pos);
-        double real_distance = center_distance - other.edge(0) - edge(0);//temp
-        return real_distance < 0;
-    }
+//    bool is_coincide(Collision other){
+//        double center_distance = distance(other.pos, pos);
+//        double accor_angle=atan((pos.y-other.pos.y)/(pos.x-other.pos.x));//炮弹和坦克身体的相对角度
+//        double real_distance = center_distance - other.edge(accor_angle) - edge(accor_angle);//temp
+//        return real_distance < 0;
+//    }
     int getLength(){return length;}
 private:
     //时间缘故，先只做圆形碰撞箱
     struct position pos;
-    double angle;
-//    char type;//'C'-circle  'S'-square
+    double angle;//含义需明确，为坦克头的朝向
+    char type;//'C'-circle  'S'-square
     int length;
     int width;
     double rad;
@@ -91,7 +94,10 @@ protected:
 
 class Tank_ai : public baseTank{
 public:
+    Tank_ai(int x, int y, double speed, int length, IMAGE& image): baseTank(x, y, length, image), speed(speed){}
     void control(double _degree = 0) override;
+protected:
+    double speed;
 };
 
 class Tank_remote : public baseTank{
@@ -105,8 +111,9 @@ public:
                             col(tank->getX() + tank->getLength() * cos(Radians(tank->getTurrent_degree())),
         tank->getY() + tank->getLength() * sin(Radians(tank->getTurrent_degree())),
         BULLET_LENGTH,
-        tank->getTurrent_degree()){}
-    void move();
+        tank->getTurrent_degree()){fire_timestamp = unix_time_stamp();}
+    position get_Bullet_pos();
+
 private:
     struct position origin_pos;
     double degree;
