@@ -1,6 +1,4 @@
-//
-// Created by Administrator on 24-5-24.
-//
+/*
 
 #include <graphics.h>
 #include <functional>
@@ -8,6 +6,10 @@
 #include <vector>
 
 using namespace std;
+
+enum tank_type{churchil,is2,sherman,t34_85,tiger};
+
+
 class Button
 {
 private:
@@ -108,10 +110,10 @@ public:
         return isSelected;
     }
 
-/*    bool isEmpty() const
+    bool isEmpty() const
     {
         return text.empty();
-    }*/
+    }
 
     void clear()
     {
@@ -335,12 +337,14 @@ public:
         initgraph(width, height);
 
         // 创建页面1
+*/
 /*        IMAGE* page1 = new IMAGE(width, height);
         setfillcolor(RGB(240, 240, 240));
         solidrectangle(0, 0, width, height);
         getimage(page1, 0, 0, width, height);
         setcurrentindex(0);切换界面
-        addPage(page1);*/
+        addPage(page1);*//*
+
         IMAGE* page1 = new IMAGE;
         loadimage(page1, "C:/Users/Administrator/Desktop/OIP-C.png",width,height);
 
@@ -348,7 +352,7 @@ public:
 
         // 在界面1创建按钮1
         Button* button1_1 = new Button(300, 400, 150, 30, "single player", [&]() {
-                                           //转到单人游戏
+                                           setCurrentIndex(4);
                                        }
         );
         addButton(0, button1_1);
@@ -359,31 +363,108 @@ public:
         );
         addButton(0, button1_2);
 
-        // 创建页面2
-        IMAGE* page2 = new IMAGE;
+
+        IMAGE*page2 = new IMAGE;
         loadimage(page2, "C:/Users/Administrator/Desktop/OIP-C.png",width,height);
 
         addPage(page2);
 
-        TextBox* textbox1 = new TextBox(200, 300, 300, 30, 10);
-        addTextBox(1, textbox1);
-
-
-        TextBox* textbox2 = new TextBox(200, 350, 300, 30, 10);
-        addTextBox(1, textbox2);
-
-
-        // 在界面2创建按钮1
-        Button* button2_1 = new Button(200, 400, 100, 30, "back", [&]() {
-            setCurrentIndex(0);
-        });
+        Button *button2_1 = new Button(300, 400, 150, 30, "creat game", [&]() {
+                                           setCurrentIndex(2);
+                                       }
+        );
         addButton(1, button2_1);
 
-        Button* button2_2 = new Button(400, 400, 100, 30, "confirm", [&]() {
-                                           //转到多人游戏
+        Button *button2_2 = new Button(300, 450, 150, 30, "join game", [&]() {
+                                           setCurrentIndex(3);
                                        }
         );
         addButton(1, button2_2);
+
+        Button *button2_3 = new Button(300, 500, 150, 30, "back", [&]() {
+            setCurrentIndex(0);
+        });
+        addButton(1, button2_3);
+
+        IMAGE* page3 = new IMAGE;
+        loadimage(page3, "C:/Users/Administrator/Desktop/OIP-C.png",width,height);
+        addPage(page3);
+
+        TextBox* textbox3_1 = new TextBox(200, 300, 300, 30, 10);
+        addTextBox(2, textbox3_1);
+
+        TextBox* textbox3_2 = new TextBox(200, 350, 300, 30, 10);
+        addTextBox(2, textbox3_2);
+
+        TextBox* textbox3_3 = new TextBox(200, 400, 300, 30, 10);
+        addTextBox(2, textbox3_3);
+
+        Button* button3_1 = new Button(200, 500, 100, 30, "back", [&]() {
+            setCurrentIndex(1);
+        });
+        addButton(2, button3_1);
+
+        Button* button3_2 = new Button(400, 500, 100, 30, "confirm", [&]() {
+
+        });
+        addButton(2, button3_2);
+
+        // 创建页面2
+        IMAGE* page4 = new IMAGE;
+        loadimage(page4, "C:/Users/Administrator/Desktop/OIP-C.png",width,height);
+
+        addPage(page4);
+
+        TextBox* textbox1 = new TextBox(200, 300, 300, 30, 10);
+        addTextBox(3, textbox1);
+
+
+        TextBox* textbox2 = new TextBox(200, 350, 300, 30, 10);
+        addTextBox(3, textbox2);
+
+
+        // 在界面2创建按钮1
+        Button* button4_1 = new Button(200, 400, 100, 30, "back", [&]() {
+            setCurrentIndex(1);
+        });
+        addButton(3, button4_1);
+
+        Button* button4_2 = new Button(400, 400, 100, 30, "confirm", [&]() {
+
+                                       }
+        );
+        addButton(3, button4_2);
+
+        //创建页面3
+        auto* page5 = new IMAGE;
+        loadimage(page5, "C:/Users/Administrator/Desktop/OIP.png",width,height);
+        addPage(page5);
+
+        Button* button5_1 = new Button(225, 276, 100, 40, "tiger", [&]() {
+
+        });
+        addButton(4, button5_1);
+        Button* button5_2 = new Button(225, 380, 100, 40, "t34_85", [&]() {
+
+                                       }
+        );
+        addButton(4, button5_2);
+        Button* button5_3 = new Button(225, 490, 100, 40, "sherman", [&]() {
+
+                                       }
+        );
+        addButton(4, button5_3);
+        Button* button5_4 = new Button(563, 276, 100, 40, "is2", [&]() {
+
+                                       }
+        );
+        addButton(4, button5_4);
+
+        Button* button5_5 = new Button(563, 380, 100, 40, "churchil", [&]() {
+
+                                       }
+        );
+        addButton(4, button5_5);
 
         setCurrentIndex(0);
     }
@@ -432,4 +513,4 @@ int main()
     widget.run();
     widget.close();
     return 0;
-}
+}*/
