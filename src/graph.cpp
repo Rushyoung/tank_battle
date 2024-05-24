@@ -6,8 +6,8 @@
  * @img:源图像
  * @mask:掩码
  * @angle:角度（弧度）
- * @centerX:
- * @centerY:
+ * @centerX:屏幕坐标系
+ * @centerY:屏幕坐标系
  * */
 void rotate_draw_mask(IMAGE* img, IMAGE* mask, double angle, int centerX, int centerY) {
     // 计算图像的中心点
@@ -35,7 +35,7 @@ void render(){
 
     Tank_info ai[AI_AMOUNT];
     Tank_info remote[REMOTE_MAX];
-    Tank_info local;
+
     for(int i = 0; i < AI_AMOUNT; i++){
         ai[i] = chan("ai" + std::to_string(i)).receive();
     }
@@ -43,6 +43,16 @@ void render(){
         remote[i] = chan("remote" + std::to_string(i)).receive();
     }
     local = chan("local").receive();
+    //render begin
+    BeginBatchDraw();
+
+
+
+
+
+
+
+    FlushBatchDraw();
 
 
 }
@@ -52,4 +62,11 @@ void render(){
 struct position map_convert_screen(position& base, position& origin){
     position dst(SCREEN_LENGTH/2, SCREEN_WIDTH/2);
     return (dst + (origin - base));
+}
+
+void draw_tank(IMAGE* body, IMAGE* body_mask, IMAGE* turret, IMAGE* turret_mask,double head_degree, double turret_degree,int center_x, int center_y,int turretOffsetX, int turretOffsetY){
+    int newOffsetX = turretOffsetX * cos(Radians(head_degree)) - turretOffsetY * sin(Radians(head_degree));
+    int newOffsetY = turretOffsetX * sin(Radians(head_degree)) + turretOffsetY * cos(Radians(head_degree));
+    rotate_draw_mask(body, body_mask, head_degree, center_x, center_y);
+    rotate_draw_mask(turret, turret_mask, turret_degree, center_x+newOffsetX, center_y+newOffsetY);
 }

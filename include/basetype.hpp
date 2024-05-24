@@ -21,12 +21,7 @@
 #define FLASH_TIME 33
 #define FRAME_TIME 10
 #define BULLET_LENGTH 10
-int random(int min, int max) {
-    std::random_device rd;
-    std::default_random_engine gen(rd());
-    std::uniform_int_distribution<int> dis(min, max);
-    return dis(gen);
-}
+int random(int min, int max);
 extern MOUSEMSG _mouse;
 struct position{
     int x;
@@ -41,10 +36,11 @@ struct position{
 
 
 };
-double distance(const position& a, const position& b) {
-    return sqrt((a.x-b.x)*(a.x-b.x) + (a.y-b.y)*(a.y-b.y));
-}
+double distance(const position& a, const position& b);
+#include <mutex>
+
 struct Tank_info{
+    std::mutex mtx;  // 用于保护这个结构体的互斥锁
     struct position pos;
     double head_degree;
     double turret_degree;
@@ -56,6 +52,7 @@ struct Tank_info{
             return *this;
         }
         else{
+            std::lock_guard<std::mutex> lock(mtx);  // 锁定互斥锁
             pos = other.pos;
             head_degree = other.head_degree;
             turret_degree = other.turret_degree;

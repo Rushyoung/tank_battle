@@ -4,7 +4,11 @@
 #include "include/net.hpp"
 #include "include/grap.hpp"
 #include "include/chanel.hpp"
+//temp
+int remote_amount;
+Tank_info local;
 
+channel_map chan::msg_set;
 MOUSEMSG _mouse;
 int main(){
     // 初始化图形窗口

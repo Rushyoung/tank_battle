@@ -83,7 +83,7 @@ protected:
 
 class Tank_local : public baseTank{
 public:
-    Tank_local(int x, int y, double speed, int length, IMAGE& image): baseTank(x, y, length, image), speed(speed){}
+    Tank_local(int x, int y, double speed, int length, IMAGE& image): baseTank(x, y, length, image), speed(speed){chan("local").send(Tank_info(pos, head_degree, turret_degree, true));}
     void control(double _degree = 0) override;
 protected:
     double speed;
