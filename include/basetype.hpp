@@ -11,7 +11,7 @@
 #include <easyx.h>
 #include <random>
 #include <thread>
-
+#include <mutex>
 
 
 #define Radians(x) ((x)*PI/180.0)
@@ -37,7 +37,7 @@ struct position{
 
 };
 double distance(const position& a, const position& b);
-#include <mutex>
+
 
 struct Tank_info{
     std::mutex mtx;  // 用于保护这个结构体的互斥锁
