@@ -3,7 +3,8 @@
 //
 #include "base.hpp"
 #include "chanel.hpp"
-#include <graphics.h>
+//#include <graphics.h>
+#include "../HiEasyX.h"
 #include <vector>
 #ifndef TANK_BATTLE_GRAP_HPP
 #define TANK_BATTLE_GRAP_HPP
@@ -20,4 +21,5 @@ void draw_tank(IMAGE* body, IMAGE* body_mask, IMAGE* turret, IMAGE* turret_mask,
                int turretOffsetX, int turretOffsetY = 0);
 void render();
 struct position map_convert_screen(position& origin);
+
 #endif //TANK_BATTLE_GRAP_HPP

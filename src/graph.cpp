@@ -18,14 +18,14 @@ void rotate_draw_mask(IMAGE* img, IMAGE* mask, double angle, int centerX, int ce
     setorigin(centerX, centerY);
 
     // 旋转图像和掩码
-    rotateimage(img, img, Radians(angle), BLACK);
-    rotateimage(mask, mask, Radians(angle), WHITE);
+    HiEasyX::RotateImage_Alpha(img, Radians(angle));
+//    rotateimage(mask, mask, Radians(angle), WHITE);
 
-    // 使用 SRCAND ROP 代码将旋转后的掩码图像绘制到屏幕上
-    putimage(-imgCenterX, -imgCenterY, mask, SRCAND);
-
-    // 使用 SRCPAINT ROP 代码将旋转后的图像绘制到屏幕上
-    putimage(-imgCenterX, -imgCenterY, img, SRCPAINT);
+//    // 使用 SRCAND ROP 代码将旋转后的掩码图像绘制到屏幕上
+//    putimage(-imgCenterX, -imgCenterY, mask, SRCAND);
+//
+//    // 使用 SRCPAINT ROP 代码将旋转后的图像绘制到屏幕上
+//    putimage(-imgCenterX, -imgCenterY, img, SRCPAINT);
 
     // 恢复坐标系的原点
     setorigin(0, 0);
@@ -71,7 +71,7 @@ void draw_tank(IMAGE* body, IMAGE* body_mask, IMAGE* turret, IMAGE* turret_mask,
 
     // 将 body 和 turret 绘制到屏幕上
     rotate_draw_mask(body, body_mask, head_degree, center_x, center_y);
-//    rotate_draw_mask(turret, turret_mask, turret_degree, center_x+newOffsetX, center_y+newOffsetY);
+    rotate_draw_mask(turret, turret_mask, turret_degree, center_x+newOffsetX, center_y+newOffsetY);
 }
 void tank_turret(IMAGE* original, IMAGE* body, IMAGE* turret,
                  position body_pos, position turret_pos,
@@ -84,3 +84,4 @@ void tank_turret(IMAGE* original, IMAGE* body, IMAGE* turret,
     getimage(turret, turret_pos.x, turret_pos.y, turretWidth, turretHeight);
     SetWorkingImage(NULL);
 }
+

@@ -5,10 +5,13 @@
 #ifndef TANK_BATTLE_BASETYPE_HPP
 #define TANK_BATTLE_BASETYPE_HPP
 
-#include <graphics.h>
+#include <propidl.h>
+
+
 #include <cmath>
-#include <graphics.h>
-#include <easyx.h>
+//#include <graphics.h>
+//#include <easyx.h>
+#include "../HiEasyX.h"
 #include <random>
 #include <thread>
 #include <mutex>
@@ -16,7 +19,7 @@
 
 #define Radians(x) ((x)*PI/180.0)
 #define Degree(x) ((x)*180/PI)
-#define PI 3.14159265359
+//#define PI 3.14159265359
 #define millisecond(x) std::chrono::milliseconds(x)
 #define FLASH_TIME 33
 #define FRAME_TIME 10
