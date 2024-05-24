@@ -1,3 +1,9 @@
+#include <windows.h>
+
+int main() {
+    PlaySoundA(TEXT("C:/Users/Administrator/Desktop/素材/music/start.wav"), NULL, SND_FILENAME);
+    return 0;
+}
 //
 // Created by 小小喵姬 on 24-5-23.
 //
