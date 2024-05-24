@@ -7,9 +7,11 @@
 #include <string>
 #include <utility>
 #ifndef TANK_BATTLE_NET_HPP
+long long int unix_time_stamp();
 enum class PacketType : char {
-    TankInfo = 0x01,
-    // 其他类型...
+    Hello = 0x01,
+    TankInfo,
+    Sync
 };
 
 
@@ -32,7 +34,12 @@ private:
     std::string _host;
     int _port;
 };
-long long int unix_time_stamp();
+
+class host{
+
+};
+
+
 #define TANK_BATTLE_NET_HPP
 
 #endif //TANK_BATTLE_NET_HPP

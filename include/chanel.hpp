@@ -21,57 +21,61 @@ using std::string;
 
 
 
+template <typename T>
 struct chan_message {
     std::mutex lock;
     std::condition_variable cond;
-    std::queue<struct Tank_info> messages;
-//    std::queue<string> messages;//wait
+    std::queue<T> messages;
     chan_message() { cout << "chan_message created\n"; }
 };
 
-using channel_map = map<string, std::shared_ptr<chan_message>>;
+template <typename T>
+using channel_map = map<string, std::shared_ptr<chan_message<T>>>;
 
+template <typename T>
 class chan {
 private:
-    static channel_map msg_set;
-    std::shared_ptr<chan_message> msg;
+    static channel_map<T> msg_set;
+    std::shared_ptr<chan_message<T>> msg;
 
 public:
     chan(string name) {
         auto it = msg_set.find(name);
         if (it == msg_set.end()) {
-            msg = std::make_shared<chan_message>();
+            msg = std::make_shared<chan_message<T>>();
             msg_set[name] = msg;
         } else {
             msg = it->second;
         }
     }
-    //wait
-    void send(const struct Tank_info& message) {
+
+    void send(const T& message) {
         std::lock_guard<std::mutex> lock(msg->lock);
-        if(msg->messages.size() >= 10)
         msg->messages.push(message);
         msg->cond.notify_one();
     }
 
-    struct Tank_info receive_safe() {
+    T receive_safe() {
         std::unique_lock<std::mutex> lock(msg->lock);
         msg->cond.wait(lock, [this] { return !msg->messages.empty(); });
-        struct Tank_info message = msg->messages.front();
+        T message = msg->messages.front();
         msg->messages.pop();
         return message;
     }
 
-    struct Tank_info receive() {
+    T receive() {
         std::lock_guard<std::mutex> lock(msg->lock);
         if (msg->messages.empty()) {
-            return Tank_info();
+            return T();
         }
-        struct Tank_info message = msg->messages.front();
+        T message = msg->messages.front();
         msg->messages.pop();
         return message;
     }
 };
+
+template <typename T>
+channel_map<T> chan<T>::msg_set = {};
 
 //int main() {
 //    chan("test").send("Hello");

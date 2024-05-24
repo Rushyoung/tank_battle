@@ -19,6 +19,10 @@
 extern bool is_host;
 extern int remote_amount;
 
+enum TankType{
+
+};
+
 class Collision{
 public:
     Collision(int x, int y, int length, double angle = 0): pos(x, y), length(length), angle(angle){}
@@ -60,9 +64,9 @@ public:
      * @x:逻辑x坐标（地图）
      * @y:逻辑y坐标（地图）
      * @length:圆形碰撞箱半径
-     * @base_image:tank的模型图片
+     * @body_image:tank的模型图片
      * */
-    baseTank(int x, int y, int length, IMAGE& base_image): pos(x, y), col(x, y, length), base_img(base_image){ head_degree = 90; enable = true; turret_degree = 90;}
+    baseTank(int x, int y, int length, int id, double speed):pos(x, y), col(x, y, length), id(id), speed(speed) { head_degree = 90; enable = true; turret_degree = 90;}
     virtual void control(double _degree = 0) = 0;
     int getX(){return pos.x;}
     int getY(){return pos.y;}
@@ -72,18 +76,20 @@ public:
     double getTurrent_degree(){return turret_degree;}
     void broken();
 protected:
+    int id;
+    enum TankType type;
     struct position pos;
     Collision col;
     double head_degree;
     double turret_degree;
     double speed;
     bool enable;
-    IMAGE& base_img;
+
 };
 
 class Tank_local : public baseTank{
 public:
-    Tank_local(int x, int y, double speed, int length, IMAGE& image): baseTank(x, y, length, image), speed(speed){chan("local").send(Tank_info(pos, head_degree, turret_degree, true));}
+    Tank_local(int x, int y, int length, int id, double speed): baseTank(x, y, length, id, speed), speed(speed){chan<Tank_info>("local").send(Tank_info(pos, head_degree, turret_degree, true));}
     void control(double _degree = 0) override;
 protected:
     double speed;
