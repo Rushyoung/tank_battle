@@ -1,4 +1,3 @@
-/*
 
 #include <graphics.h>
 #include <functional>
@@ -9,6 +8,93 @@ using namespace std;
 
 enum tank_type{churchil,is2,sherman,t34_85,tiger};
 
+struct tank_data
+{
+    int offsite;
+    int body_x;
+    int body_y;
+    int body_width;
+    int turret_x;
+    int turret_y;
+    int turret_width;
+    int turret_center_x;
+    int turret_center_y;
+    IMAGE body;
+    IMAGE turret;
+    IMAGE original;
+    IMAGE body_mask;
+    IMAGE turret_mask;
+    IMAGE original_mask;
+    tank_data(enum tank_type type){
+        switch (type) {
+            case churchil:
+                offsite=0;
+                body_x=45;
+                body_y=3;
+                body_width=150;
+                turret_x=94;
+                turret_y=128;
+                turret_width=90;
+                turret_center_x=125;
+                turret_center_y=174;
+                loadimage(&original,"source/tank/churchill.png");
+                loadimage(&original_mask,"source/tank/churchill_mask.png");
+                break;
+            case is2:
+                offsite=12;
+                body_x=51;
+                body_y=5;
+                body_width=145;
+                turret_x=110;
+                turret_y=110;
+                turret_width=140;
+                turret_center_x=141;
+                turret_center_y=176;
+                loadimage(&original,"source/tank/is2.png");
+                loadimage(&original_mask,"source/tank/is2_mask.png");
+                break;
+            case sherman:
+                offsite=2;
+                body_x=67;
+                body_y=20;
+                body_width=115;
+                turret_x=91;
+                turret_y=119;
+                turret_width=111;
+                turret_center_x=124;
+                turret_center_y=175;
+                loadimage(&original,"source/tank/sherman.png");
+                loadimage(&original_mask,"source/tank/sherman_mask.png");
+                break;
+            case t34_85:
+                offsite=10;
+                body_x=52;
+                body_y=0;
+                body_width=150;
+                turret_x=104;
+                turret_y=96;
+                turret_width=146;
+                turret_center_x=140;
+                turret_center_y=177;
+                loadimage(&original,"source/tank/t34_85.png");
+                loadimage(&original_mask,"source/tank/t34_85_mask.png");
+                break;
+            case tiger:
+                offsite=2;
+                body_x=44;
+                body_y=2;
+                body_width=156;
+                turret_x=84;
+                turret_y=116;
+                turret_width=116;
+                turret_center_x=127;
+                turret_center_y=176;
+                loadimage(&original,"source/tank/tiger.png");
+                loadimage(&original_mask,"source/tank/tiger_mask.png");
+                break;
+        }
+    };
+};
 
 class Button
 {
@@ -242,6 +328,7 @@ private:
         }
     }
 
+
     void setCurrentIndex(int index)
     {
         if (index >= 0 && index < pages.size())
@@ -336,17 +423,8 @@ public:
     {
         initgraph(width, height);
 
-        // 创建页面1
-*/
-/*        IMAGE* page1 = new IMAGE(width, height);
-        setfillcolor(RGB(240, 240, 240));
-        solidrectangle(0, 0, width, height);
-        getimage(page1, 0, 0, width, height);
-        setcurrentindex(0);切换界面
-        addPage(page1);*//*
-
         IMAGE* page1 = new IMAGE;
-        loadimage(page1, "C:/Users/Administrator/Desktop/OIP-C.png",width,height);
+        loadimage(page1, "source/ui/OIP-C.png",width,height);
 
         addPage(page1);
 
@@ -363,20 +441,19 @@ public:
         );
         addButton(0, button1_2);
 
-
         IMAGE*page2 = new IMAGE;
-        loadimage(page2, "C:/Users/Administrator/Desktop/OIP-C.png",width,height);
+        loadimage(page2, "source/ui/OIP-C.png",width,height);
 
         addPage(page2);
 
         Button *button2_1 = new Button(300, 400, 150, 30, "creat game", [&]() {
-                                           setCurrentIndex(2);
+                                           setCurrentIndex(3);
                                        }
         );
         addButton(1, button2_1);
 
         Button *button2_2 = new Button(300, 450, 150, 30, "join game", [&]() {
-                                           setCurrentIndex(3);
+                                           setCurrentIndex(2);
                                        }
         );
         addButton(1, button2_2);
@@ -387,16 +464,16 @@ public:
         addButton(1, button2_3);
 
         IMAGE* page3 = new IMAGE;
-        loadimage(page3, "C:/Users/Administrator/Desktop/OIP-C.png",width,height);
+        loadimage(page3, "source/ui/OIP-JOIN.png",width,height);
         addPage(page3);
 
-        TextBox* textbox3_1 = new TextBox(200, 300, 300, 30, 10);
+        TextBox* textbox3_1 = new TextBox(220, 300, 300, 30, 10);
         addTextBox(2, textbox3_1);
 
-        TextBox* textbox3_2 = new TextBox(200, 350, 300, 30, 10);
+        TextBox* textbox3_2 = new TextBox(220, 350, 300, 30, 10);
         addTextBox(2, textbox3_2);
 
-        TextBox* textbox3_3 = new TextBox(200, 400, 300, 30, 10);
+        TextBox* textbox3_3 = new TextBox(220, 400, 300, 30, 10);
         addTextBox(2, textbox3_3);
 
         Button* button3_1 = new Button(200, 500, 100, 30, "back", [&]() {
@@ -411,15 +488,15 @@ public:
 
         // 创建页面2
         IMAGE* page4 = new IMAGE;
-        loadimage(page4, "C:/Users/Administrator/Desktop/OIP-C.png",width,height);
+        loadimage(page4, "source/ui/OIP-CREATE.png",width,height);
 
         addPage(page4);
 
-        TextBox* textbox1 = new TextBox(200, 300, 300, 30, 10);
+        TextBox* textbox1 = new TextBox(220, 300, 300, 30, 10);
         addTextBox(3, textbox1);
 
 
-        TextBox* textbox2 = new TextBox(200, 350, 300, 30, 10);
+        TextBox* textbox2 = new TextBox(220, 350, 300, 30, 10);
         addTextBox(3, textbox2);
 
 
@@ -437,7 +514,7 @@ public:
 
         //创建页面3
         auto* page5 = new IMAGE;
-        loadimage(page5, "C:/Users/Administrator/Desktop/OIP.png",width,height);
+        loadimage(page5, "source/ui/OIP.png",width,height);
         addPage(page5);
 
         Button* button5_1 = new Button(225, 276, 100, 40, "tiger", [&]() {
@@ -513,4 +590,4 @@ int main()
     widget.run();
     widget.close();
     return 0;
-}*/
+}
