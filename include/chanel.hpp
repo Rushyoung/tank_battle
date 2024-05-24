@@ -49,6 +49,7 @@ public:
     //wait
     void send(const struct Tank_info& message) {
         std::lock_guard<std::mutex> lock(msg->lock);
+        if(msg->messages.size() >= 10)
         msg->messages.push(message);
         msg->cond.notify_one();
     }

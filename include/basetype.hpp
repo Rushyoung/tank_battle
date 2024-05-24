@@ -32,18 +32,36 @@ struct position{
     int x;
     int y;
     position(int x,int y):x(x), y(y){}
-    //distance
-    double operator-(const position& a) const{
-        return sqrt((a.x-x)*(a.x-x) + (a.y-y)*(a.y-y));
+    position operator+(const position& dst){
+        return position(x + dst.x, y + dst.y);
     }
-};
+    position operator-(const position& base){
+        return position(x - base.x, y - base.y);
+    }
 
+
+};
+double distance(const position& a, const position& b) {
+    return sqrt((a.x-b.x)*(a.x-b.x) + (a.y-b.y)*(a.y-b.y));
+}
 struct Tank_info{
     struct position pos;
     double head_degree;
-    double turrent_degree;
+    double turret_degree;
     bool enable;
     Tank_info(): pos(-1, -1){enable = false;}
-    Tank_info(struct position pos, double head_degree, double turret_degree, bool enable): pos(pos), head_degree(head_degree), turrent_degree(turret_degree), enable(enable){}
+    Tank_info(struct position pos, double head_degree, double turret_degree, bool enable): pos(pos), head_degree(head_degree), turret_degree(turret_degree), enable(enable){}
+    Tank_info& operator=(const Tank_info& other){
+        if(other.pos.x < 0 || other.pos.y < 0){
+            return *this;
+        }
+        else{
+            pos = other.pos;
+            head_degree = other.head_degree;
+            turret_degree = other.turret_degree;
+            enable = other.enable;
+            return *this;
+        }
+    }
 };
 #endif //TANK_BATTLE_BASETYPE_HPP

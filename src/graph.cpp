@@ -32,6 +32,24 @@ void rotate_draw_mask(IMAGE* img, IMAGE* mask, double angle, int centerX, int ce
 }
 
 void render(){
-    std::vector<Tank_info> info;
-    info[0] = chan("local").receive();
+
+    Tank_info ai[AI_AMOUNT];
+    Tank_info remote[REMOTE_MAX];
+    Tank_info local;
+    for(int i = 0; i < AI_AMOUNT; i++){
+        ai[i] = chan("ai" + std::to_string(i)).receive();
+    }
+    for(int i = 0; i < remote_amount; i++){
+        remote[i] = chan("remote" + std::to_string(i)).receive();
+    }
+    local = chan("local").receive();
+
+
+}
+
+
+//转换为使用origin为屏幕中心的坐标系
+struct position map_convert_screen(position& base, position& origin){
+    position dst(SCREEN_LENGTH/2, SCREEN_WIDTH/2);
+    return (dst + (origin - base));
 }

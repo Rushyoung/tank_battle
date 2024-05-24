@@ -7,13 +7,17 @@
 void Tank_local::control(double _degree) {
     while(true){
         if(!enable){return;}//destruct & broken
+        bool changed;
+        changed = false;
         _mouse = GetMouseMsg();
         switch(_mouse.uMsg){
             case WM_MOUSEMOVE:
                 turret_degree = Degree(atan2(_mouse.y - pos.y, _mouse.x - pos.x));
+                changed = true;
                 //wait for adjust
             case WM_LBUTTONDOWN:
                 turret_degree = Degree(atan2(_mouse.y - pos.y, _mouse.x - pos.x));
+                changed = true;
                 //wait for fire & adjust
         }
         //move forward
@@ -26,6 +30,7 @@ void Tank_local::control(double _degree) {
             } else {
                 pos.x += speed * cos(Radians(head_degree));
                 pos.y += speed * sin(Radians(head_degree));
+                changed = true;
             }
         }
         //move backward
@@ -38,6 +43,7 @@ void Tank_local::control(double _degree) {
             } else {
                 pos.x -= speed * cos(Radians(head_degree));
                 pos.y -= speed * sin(Radians(head_degree));
+                changed = true;
             }
         }
         //rotate+
@@ -46,6 +52,7 @@ void Tank_local::control(double _degree) {
             while (head_degree >= 360) {
                 head_degree -= 360;
             }
+            changed = true;
         }
         //rotate-
         {
@@ -53,9 +60,12 @@ void Tank_local::control(double _degree) {
             while (head_degree < 0) {
                 head_degree += 360;
             }
+            changed = true;
         }
         //send
-        chan("local").send(Tank_info(pos, head_degree, turret_degree, true));
+        if(changed){
+            chan("local").send(Tank_info(pos, head_degree, turret_degree, true));
+        }
         //sleep
         std::this_thread::sleep_for(millisecond(FRAME_TIME));
     }

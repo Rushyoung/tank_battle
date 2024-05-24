@@ -11,11 +11,13 @@
 #include "chanel.hpp"
 #ifndef TANK_BATTLE_BASE_HPP
 #define TANK_BATTLE_BASE_HPP
+#define AI_AMOUNT 20
+#define REMOTE_MAX 2
 
 
-
-
-
+//extern int ai_amount;
+extern bool is_host;
+extern int remote_amount;
 
 class Collision{
 public:
@@ -37,7 +39,7 @@ public:
      * @return:碰撞1，没碰0
      * */
     bool is_coincide(Collision other){
-        double center_distance = other.pos - pos;
+        double center_distance = distance(other.pos, pos);
         double real_distance = center_distance - other.edge(0) - edge(0);//temp
         return real_distance < 0;
     }
@@ -102,6 +104,7 @@ public:
     Bullet(baseTank* tank): origin_pos(tank->getPos()), degree(tank->getDegree()),
                             col(tank->getX() + tank->getLength() * cos(Radians(tank->getTurrent_degree())),
         tank->getY() + tank->getLength() * sin(Radians(tank->getTurrent_degree())),
+        BULLET_LENGTH,
         tank->getTurrent_degree()){}
     void move();
 private:
