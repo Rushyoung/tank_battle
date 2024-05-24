@@ -14,7 +14,8 @@ add_executable(tank_battle
         src/graph.cpp
         include/basetype.hpp
         src/net.cpp
-        src/basetype.cpp)
+        src/basetype.cpp
+        src/ui.cpp)
 if(WIN32)
     target_link_libraries(tank_battle wsock32 ws2_32)
 endif()
