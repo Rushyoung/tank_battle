@@ -12,7 +12,7 @@ void rotate_draw_mask(IMAGE* img, IMAGE* mask, double angle, int x, int y);
 
 void tank_turret(IMAGE* original, IMAGE* body, IMAGE* turret,
                  position body_pos, position turret_pos,
-                 int turretWidth, int turretHeight);
+                 int bodyWidth, int turretWidth);
 
 void draw_tank(IMAGE* body, IMAGE* body_mask, IMAGE* turret, IMAGE* turret_mask,
                double head_degree, double turret_degree,

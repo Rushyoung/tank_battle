@@ -40,6 +40,7 @@ double distance(const position& a, const position& b);
 
 
 struct Tank_info{
+    Tank_info(Tank_info const &info): pos(info.pos) {}
     std::mutex mtx;  // 用于保护这个结构体的互斥锁
     struct position pos;
     double head_degree;

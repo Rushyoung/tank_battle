@@ -141,7 +141,7 @@ void Tank_ai::control(double _degree) {
 
         //send
         if(changed){
-            chan("local").send(Tank_info(pos, head_degree, turret_degree, true));
+            chan<Tank_info>("local").send(Tank_info(pos, head_degree, turret_degree, true));
         }
         //sleep
         std::this_thread::sleep_for(millisecond(FRAME_TIME));

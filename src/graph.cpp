@@ -37,12 +37,12 @@ void render(){
     Tank_info remote[REMOTE_MAX];
 
     for(int i = 0; i < AI_AMOUNT; i++){
-        ai[i] = chan("ai" + std::to_string(i)).receive();
+        ai[i] = chan<Tank_info>("ai" + std::to_string(i)).receive();
     }
     for(int i = 0; i < remote_amount; i++){
-        remote[i] = chan("remote" + std::to_string(i)).receive();
+        remote[i] = chan<Tank_info>("remote" + std::to_string(i)).receive();
     }
-    local = chan("local").receive();
+    local = chan<Tank_info>("local").receive();
     //render begin
     BeginBatchDraw();
     cleardevice();
@@ -70,4 +70,14 @@ void draw_tank(IMAGE* body, IMAGE* body_mask, IMAGE* turret, IMAGE* turret_mask,
     int newOffsetY = turretOffsetX * sin(Radians(head_degree)) + turretOffsetY * cos(Radians(head_degree));
     rotate_draw_mask(body, body_mask, head_degree, center_x, center_y);
     rotate_draw_mask(turret, turret_mask, turret_degree, center_x+newOffsetX, center_y+newOffsetY);
+}
+
+void tank_turret(IMAGE* original, IMAGE* body, IMAGE* turret,
+                 position body_pos, position turret_pos,
+                 int bodyWidth, int turretWidth) {
+    int bodyHeight = bodyWidth;
+    int turretHeight = turretWidth;
+    // 从 original 中裁剪出 body 和 turret 的图像
+    getimage(body, body_pos.x, body_pos.y, bodyWidth, bodyHeight);
+    getimage(turret, turret_pos.x, turret_pos.y, turretWidth, turretHeight);
 }
