@@ -11,23 +11,21 @@
 #include <iostream>
 #include <map>
 #include <queue>
+#include "basetype.hpp"
+
 
 using std::cout;
 using std::map;
 using std::queue;
 using std::string;
 
-struct Tank_info{
-    struct position pos;
-    double head_degree;
-    double turrent_degree;
-    bool enable;
-};
+
 
 struct chan_message {
     std::mutex lock;
     std::condition_variable cond;
-    std::queue<string> messages;//wait
+    std::queue<struct Tank_info> messages;
+//    std::queue<string> messages;//wait
     chan_message() { cout << "chan_message created\n"; }
 };
 
@@ -49,26 +47,26 @@ public:
         }
     }
     //wait
-    void send(const string& message) {
+    void send(const struct Tank_info& message) {
         std::lock_guard<std::mutex> lock(msg->lock);
         msg->messages.push(message);
         msg->cond.notify_one();
     }
 
-    string receive_safe() {
+    struct Tank_info receive_safe() {
         std::unique_lock<std::mutex> lock(msg->lock);
         msg->cond.wait(lock, [this] { return !msg->messages.empty(); });
-        std::string message = msg->messages.front();
+        struct Tank_info message = msg->messages.front();
         msg->messages.pop();
         return message;
     }
 
-    string receive() {
+    struct Tank_info receive() {
         std::lock_guard<std::mutex> lock(msg->lock);
         if (msg->messages.empty()) {
-            return "";
+            return Tank_info();
         }
-        std::string message = msg->messages.front();
+        struct Tank_info message = msg->messages.front();
         msg->messages.pop();
         return message;
     }

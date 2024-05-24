@@ -11,10 +11,10 @@ void Tank_local::control(double _degree) {
         switch(_mouse.uMsg){
             case WM_MOUSEMOVE:
                 turret_degree = Degree(atan2(_mouse.y - pos.y, _mouse.x - pos.x));
-                //wait for process
+                //wait for adjust
             case WM_LBUTTONDOWN:
                 turret_degree = Degree(atan2(_mouse.y - pos.y, _mouse.x - pos.x));
-
+                //wait for fire & adjust
         }
         //move forward
         {
@@ -55,8 +55,9 @@ void Tank_local::control(double _degree) {
             }
         }
         //send
-
+        chan("local").send(Tank_info(pos, head_degree, turret_degree, true));
         //sleep
+        std::this_thread::sleep_for(millisecond(FRAME_TIME));
     }
 }
 

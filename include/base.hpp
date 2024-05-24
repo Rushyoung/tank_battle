@@ -7,35 +7,15 @@
 #define SCREEN_WIDTH 1080
 #define SCREEN_LENGTH 1920
 
-#include <cmath>
-#include <graphics.h>
-#include <random>
-int random(int min, int max) {
-    std::random_device rd;
-    std::default_random_engine gen(rd());
-    std::uniform_int_distribution<int> dis(min, max);
-    return dis(gen);
-}
+#include "basetype.hpp"
+#include "chanel.hpp"
 #ifndef TANK_BATTLE_BASE_HPP
 #define TANK_BATTLE_BASE_HPP
-#define Radians(x) ((x)*PI/180.0)
-#define Degree(x) ((x)*180/PI)
-#define PI 3.14159265359
-#define millisecond(x) std::chrono::milliseconds(x)
-#define FLASH_TIME 33
-#define FRAME_TIME 10
-#define BULLET_LENGTH 10
 
-extern MOUSEMSG _mouse;
-struct position{
-    int x;
-    int y;
-    position(int x,int y):x(x), y(y){}
-    //distance
-    double operator-(const position& a) const{
-        return sqrt((a.x-x)*(a.x-x) + (a.y-y)*(a.y-y));
-    }
-};
+
+
+
+
 
 class Collision{
 public:
@@ -119,15 +99,16 @@ public:
 
 class Bullet {
 public:
-    Bullet(baseTank* tank):pos(tank->getPos()), degree(tank->getDegree()),
-    col(tank->getX() + tank->getLength() * cos(Radians(tank->getTurrent_degree())),
+    Bullet(baseTank* tank): origin_pos(tank->getPos()), degree(tank->getDegree()),
+                            col(tank->getX() + tank->getLength() * cos(Radians(tank->getTurrent_degree())),
         tank->getY() + tank->getLength() * sin(Radians(tank->getTurrent_degree())),
         tank->getTurrent_degree()){}
     void move();
 private:
-    struct position pos;
+    struct position origin_pos;
     double degree;
     Collision col;
+    long long fire_timestamp;
 };
 
 
