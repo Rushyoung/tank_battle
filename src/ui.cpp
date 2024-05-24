@@ -39,6 +39,10 @@ struct tank_data
                 turret_center_y=174;
                 loadimage(&original,"source/tank/churchill.png");
                 loadimage(&original_mask,"source/tank/churchill_mask.png");
+                body = IMAGE(body_width,body_width);
+                body_mask = IMAGE(body_width,body_width);
+                turret = IMAGE(turret_width,turret_width);
+                turret_mask = IMAGE(turret_width,turret_width);
                 break;
             case is2:
                 offsite=12;
@@ -52,6 +56,10 @@ struct tank_data
                 turret_center_y=176;
                 loadimage(&original,"source/tank/is2.png");
                 loadimage(&original_mask,"source/tank/is2_mask.png");
+                body = IMAGE(body_width,body_width);
+                body_mask = IMAGE(body_width,body_width);
+                turret = IMAGE(turret_width,turret_width);
+                turret_mask = IMAGE(turret_width,turret_width);
                 break;
             case sherman:
                 offsite=2;
@@ -65,6 +73,10 @@ struct tank_data
                 turret_center_y=175;
                 loadimage(&original,"source/tank/sherman.png");
                 loadimage(&original_mask,"source/tank/sherman_mask.png");
+                body = IMAGE(body_width,body_width);
+                body_mask = IMAGE(body_width,body_width);
+                turret = IMAGE(turret_width,turret_width);
+                turret_mask = IMAGE(turret_width,turret_width);
                 break;
             case t34_85:
                 offsite=10;
@@ -78,6 +90,10 @@ struct tank_data
                 turret_center_y=177;
                 loadimage(&original,"source/tank/t34_85.png");
                 loadimage(&original_mask,"source/tank/t34_85_mask.png");
+                body = IMAGE(body_width,body_width);
+                body_mask = IMAGE(body_width,body_width);
+                turret = IMAGE(turret_width,turret_width);
+                turret_mask = IMAGE(turret_width,turret_width);
                 break;
             case tiger:
                 offsite=2;
@@ -91,6 +107,10 @@ struct tank_data
                 turret_center_y=176;
                 loadimage(&original,"source/tank/tiger.png");
                 loadimage(&original_mask,"source/tank/tiger_mask.png");
+                body = IMAGE(body_width,body_width);
+                body_mask = IMAGE(body_width,body_width);
+                turret = IMAGE(turret_width,turret_width);
+                turret_mask = IMAGE(turret_width,turret_width);
                 break;
         }
     };
