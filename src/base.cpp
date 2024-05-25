@@ -3,10 +3,13 @@
 //
 #include "../include/base.hpp"
 #include "../include/grap.hpp"
+#include <iostream>
 
 #define ROTATE_SPEED 0.1
 
-void Tank_local::control(double _degree) {
+void Tank_local::control() {
+    chan<Tank_info>("local").send(Tank_info(pos, head_degree, turret_degree, true));
+    chan<tank_draw_data*> ("local").send(draw);
     while(true){
         if(!enable){return;}//destruct & broken
         bool changed;
@@ -14,16 +17,18 @@ void Tank_local::control(double _degree) {
         _mouse = GetMouseMsg();
         switch(_mouse.uMsg){
             case WM_MOUSEMOVE:
-                turret_degree = Degree(atan2(_mouse.y - pos.y, _mouse.x - pos.x));
+                std::cerr << "mouse" << _mouse.x << std::endl;
+                turret_degree = atan2(_mouse.y - pos.y, _mouse.x - pos.x);
                 changed = true;
                 //wait for adjust
             case WM_LBUTTONDOWN:
-                turret_degree = Degree(atan2(_mouse.y - pos.y, _mouse.x - pos.x));
+                turret_degree = atan2(_mouse.y - pos.y, _mouse.x - pos.x);
                 changed = true;
                 //wait for fire & adjust
         }
         //move forward
         if(GetAsyncKeyState(VK_UP)&0x80000){
+            std::cerr << "up" << std::endl;
             if (pos.x + speed * cos(Radians(head_degree)) >= MAP_X ||
                 pos.x + speed * cos(Radians(head_degree)) <= 0 ||
                 pos.y + speed * sin(Radians(head_degree)) >= MAP_Y ||
@@ -66,7 +71,7 @@ void Tank_local::control(double _degree) {
         }
         //send
         if(changed){
-            chan("local").send(Tank_info(pos, head_degree, turret_degree, true));
+            chan<Tank_info>("local").send(Tank_info(pos, head_degree, turret_degree, true));
         }
         //sleep
         std::this_thread::sleep_for(millisecond(FRAME_TIME));
@@ -83,7 +88,7 @@ position Bullet::get_Bullet_pos() {
 }
 
 
-void Tank_ai::control(double _degree) {
+void Tank_ai::control() {
     bool changed=false;
     while(true) {
         //move forward

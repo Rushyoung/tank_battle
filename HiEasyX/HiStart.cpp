@@ -1,19 +1,21 @@
 #include "HiStart.h"
 #include "HiWindow.h"
 
+#include <WinSock2.h>
+
 #include <windows.h>
 #include <graphics.h>
 #include <time.h>
 
-// ¶¨ÒåÈ«¾Ö±äÁ¿
-POINT* g_pDst;     // µã¼¯(Ä¿±ê)
+// ï¿½ï¿½ï¿½ï¿½È«ï¿½Ö±ï¿½ï¿½ï¿½
+POINT* g_pDst;     // ï¿½ã¼¯(Ä¿ï¿½ï¿½)
 COLORREF* g_pDst_color;
-POINT* g_pSrc;     // µã¼¯(Ô´)
-int g_nWidth;      // ÎÄ×ÖµÄ¿í¶È
-int g_nHeight;     // ÎÄ×ÖµÄ¸ß¶È
-int g_nCount;      // µã¼¯°üº¬µÄµãµÄÊýÁ¿
+POINT* g_pSrc;     // ï¿½ã¼¯(Ô´)
+int g_nWidth;      // ï¿½ï¿½ï¿½ÖµÄ¿ï¿½ï¿½
+int g_nHeight;     // ï¿½ï¿½ï¿½ÖµÄ¸ß¶ï¿½
+int g_nCount;      // ï¿½ã¼¯ï¿½ï¿½ï¿½ï¿½ï¿½Äµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
-// ¼ÓÔØÄ¿±êÍ¼Ïñ
+// ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½Í¼ï¿½ï¿½
 DWORD Icon[200 * 200] = {
 	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
 	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
@@ -217,7 +219,7 @@ DWORD Icon[200 * 200] = {
 	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
 };
 
-// ÊÇ·ñÎª±ßÔµµã
+// ï¿½Ç·ï¿½Îªï¿½ï¿½Ôµï¿½ï¿½
 std::pair<bool, COLORREF> IsEdgePoint(int x, int y)
 {
 	POINT t[4] = { {0,4}, {0,-1}, {4,0}, {-1,0} };
@@ -227,20 +229,20 @@ std::pair<bool, COLORREF> IsEdgePoint(int x, int y)
 	return std::make_pair(true, color);
 }
 
-// »ñÈ¡Ä¿±êµã¼¯
+// ï¿½ï¿½È¡Ä¿ï¿½ï¿½ã¼¯
 void GetDstPoints(int w, int h, HWND hWnd)
 {
-	// ÉèÖÃÁÙÊ±»æÍ¼¶ÔÏó
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½Í¼ï¿½ï¿½ï¿½ï¿½
 	IMAGE img;
 	SetWorkingImage(&img);
 
 	setbkmode(TRANSPARENT);
 
-	// ¶¨ÒåÄ¿±ê×Ö·û´®
+	// ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½
 	TCHAR s[] = _T("HiEasyX");
 	TCHAR s_ver[] = _HIEASYX_VER_STR_;
 
-	// ¼ÆËãÄ¿±ê×Ö·û´®µÄ¿í¸ß£¬²¢µ÷ÕûÁÙÊ±»æÍ¼¶ÔÏóµÄ³ß´ç
+	// ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½ß£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½Í¼ï¿½ï¿½ï¿½ï¿½Ä³ß´ï¿½
 
 	g_nHeight = 200;
 
@@ -291,7 +293,7 @@ void GetDstPoints(int w, int h, HWND hWnd)
 
 	putimage(g_nWidth / 2 - 100, 0, &icon);
 
-	// ¼ÆËã¹¹³ÉÄ¿±ê×Ö·û´®µÄµãµÄÊýÁ¿
+	// ï¿½ï¿½ï¿½ã¹¹ï¿½ï¿½Ä¿ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½Äµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	int x, y;
 	g_nCount = 0;
 	for (x = 0; x < g_nWidth; x++)
@@ -306,7 +308,7 @@ void GetDstPoints(int w, int h, HWND hWnd)
 		}
 	}
 
-	// ¼ÆËãÄ¿±êÊý¾Ý
+	// ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	g_pDst = new POINT[g_nCount];
 	g_pDst_color = new COLORREF[g_nCount];
 
@@ -326,16 +328,16 @@ void GetDstPoints(int w, int h, HWND hWnd)
 		}
 	}
 
-	// »Ö¸´¶ÔÆÁÄ»µÄ»æÍ¼²Ù×÷
+	// ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½Ä»ï¿½Ä»ï¿½Í¼ï¿½ï¿½ï¿½ï¿½
 	SetWorkingImage(HiEasyX::GetWindowImage(hWnd));
 }
-// »ñÈ¡Ô´µã¼¯
+// ï¿½ï¿½È¡Ô´ï¿½ã¼¯
 void GetSrcPoints(int w, int h)
 {
-	// ÉèÖÃËæ»úÖÖ×Ó
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	srand((unsigned int)time(nullptr));
 
-	// ÉèÖÃËæ»úµÄÔ´Êý¾Ý
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô´ï¿½ï¿½ï¿½ï¿½
 	g_pSrc = new POINT[g_nCount];
 	for (int i = 0; i < g_nCount; i++)
 	{
@@ -344,7 +346,7 @@ void GetSrcPoints(int w, int h)
 	}
 }
 
-// È«ÆÁÄ£ºý´¦Àí(ºöÂÔÆÁÄ»µÚÒ»ÐÐºÍ×îºóÒ»ÐÐ)
+// È«ï¿½ï¿½Ä£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä»ï¿½ï¿½Ò»ï¿½Ðºï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½)
 void Blur(DWORD* pMem, int w, int h, int speed)
 {
 	for (int i = w; i < w * (h - 1); i++)
@@ -365,10 +367,10 @@ void Blur(DWORD* pMem, int w, int h, int speed)
 
 void HiEasyX::RenderStartScene(HWND hWnd, int w, int h, int nPreCmdShow)
 {
-	GetDstPoints(w, h, hWnd);						// »ñÈ¡Ä¿±êµã¼¯
-	GetSrcPoints(w, h);						// »ñÈ¡Ô´µã¼¯
+	GetDstPoints(w, h, hWnd);						// ï¿½ï¿½È¡Ä¿ï¿½ï¿½ã¼¯
+	GetSrcPoints(w, h);						// ï¿½ï¿½È¡Ô´ï¿½ã¼¯
 
-	DisableResizing(hWnd, true); //½ûÖ¹´°¿ÚÀ­Éì
+	DisableResizing(hWnd, true); //ï¿½ï¿½Ö¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	BEGIN_TASK();
 
 	setbkcolor(RGB(255, 255, 255));
@@ -382,7 +384,7 @@ void HiEasyX::RenderStartScene(HWND hWnd, int w, int h, int nPreCmdShow)
 	UpdateWindow(hWnd);
 	DWORD* pBuf = GetImageBuffer(HiEasyX::GetWindowImage(hWnd));
 
-	// ÔËËã
+	// ï¿½ï¿½ï¿½ï¿½
 	int x, y;
 	long long sleep_time = (long long)(-1 * (0.000006276f) * (w * h) + 25);
 	for (int i = 2; i <= 450; i += 3)
@@ -395,7 +397,7 @@ void HiEasyX::RenderStartScene(HWND hWnd, int w, int h, int nPreCmdShow)
 		int brightness = std::max(0, 150 - i);
 #endif
 
-		Blur(pBuf, w, h, i <= 256 ? 3 : int(double(i - 256) / 10) + 3);                     // È«ÆÁÄ£ºý´¦Àí
+		Blur(pBuf, w, h, i <= 256 ? 3 : int(double(i - 256) / 10) + 3);                     // È«ï¿½ï¿½Ä£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
 #ifdef _MSC_VER
 		int val = min(256, i);
@@ -408,12 +410,12 @@ void HiEasyX::RenderStartScene(HWND hWnd, int w, int h, int nPreCmdShow)
 #ifdef _MSC_VER
 			x = g_pSrc[d].x + (g_pDst[d].x - g_pSrc[d].x) * val / max(256, 514 - i);
 			y = g_pSrc[d].y + (g_pDst[d].y - g_pSrc[d].y) * val / max(256, 514 - i);
-			pBuf[y * w + x] = RGB(min(255, GetBValue(g_pDst_color[d]) + brightness), min(255, GetGValue(g_pDst_color[d]) + brightness), min(255, GetRValue(g_pDst_color[d]) + brightness));        // Ö±½Ó²Ù×÷ÏÔÊ¾»º³åÇø»­µã
+			pBuf[y * w + x] = RGB(min(255, GetBValue(g_pDst_color[d]) + brightness), min(255, GetGValue(g_pDst_color[d]) + brightness), min(255, GetRValue(g_pDst_color[d]) + brightness));        // Ö±ï¿½Ó²ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
 #else
 			x = g_pSrc[d].x + (g_pDst[d].x - g_pSrc[d].x) * val / std::max(256, 514 - i);
 			y = g_pSrc[d].y + (g_pDst[d].y - g_pSrc[d].y) * val / std::max(256, 514 - i);
-			pBuf[y * w + x] = RGB(std::min(255, GetBValue(g_pDst_color[d]) + brightness), std::min(255, GetGValue(g_pDst_color[d]) + brightness), std::min(255, GetRValue(g_pDst_color[d]) + brightness));        // Ö±½Ó²Ù×÷ÏÔÊ¾»º³åÇø»­µã
+			pBuf[y * w + x] = RGB(std::min(255, GetBValue(g_pDst_color[d]) + brightness), std::min(255, GetGValue(g_pDst_color[d]) + brightness), std::min(255, GetRValue(g_pDst_color[d]) + brightness));        // Ö±ï¿½Ó²ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 #endif
 		}
 
@@ -425,12 +427,12 @@ void HiEasyX::RenderStartScene(HWND hWnd, int w, int h, int nPreCmdShow)
 		if (!HiEasyX::IsAliveWindow(hWnd)) break;
 	}
 
-	// ÇåÀíÄÚ´æ
+	// ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½
 	delete g_pDst;
 	delete g_pDst_color;
 	delete g_pSrc;
 
 	std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
-	DisableResizing(hWnd, false); //ÔÊÐí´°¿ÚÀ­Éì
+	DisableResizing(hWnd, false); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 }

@@ -1,23 +1,24 @@
 /**
  * @file	Container.h
- * @brief	HiEasyX ¿âµÄ»ù´¡ÈÝÆ÷
+ * @brief	HiEasyX ï¿½ï¿½Ä»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
  * @author	huidong
 */
 
 #pragma once
 
+#include <WinSock2.h>
 #include <Windows.h>
 
 namespace HiEasyX
 {
 	/**
-	 * @brief »ù´¡ÈÝÆ÷
+	 * @brief ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	*/
 	class Container
 	{
 	protected:
 
-		RECT m_rct = { 0 };					///< ÈÝÆ÷ÇøÓò
+		RECT m_rct = { 0 };					///< ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
 	public:
 
@@ -26,25 +27,25 @@ namespace HiEasyX
 		virtual ~Container();
 
 		/**
-		 * @brief ÏìÓ¦¸üÐÂÇøÓòÏûÏ¢
-		 * @param[in] rctOld ¾ÉµÄÇøÓò
+		 * @brief ï¿½ï¿½Ó¦ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢
+		 * @param[in] rctOld ï¿½Éµï¿½ï¿½ï¿½ï¿½ï¿½
 		*/
 		virtual void UpdateRect(RECT rctOld);
 
 		RECT GetRect() const { return m_rct; }
 
 		/**
-		 * @brief ÉèÖÃÎ»ÖÃºÍ¿í¸ß
-		 * @param[in] x	Î»ÖÃ
-		 * @param[in] y	Î»ÖÃ
-		 * @param[in] w	¿í
-		 * @param[in] h	¸ß
+		 * @brief ï¿½ï¿½ï¿½ï¿½Î»ï¿½ÃºÍ¿ï¿½ï¿½
+		 * @param[in] x	Î»ï¿½ï¿½
+		 * @param[in] y	Î»ï¿½ï¿½
+		 * @param[in] w	ï¿½ï¿½
+		 * @param[in] h	ï¿½ï¿½
 		*/
 		void SetRect(int x, int y, int w, int h);
 
 		/**
-		 * @brief ÉèÖÃ¾ØÐÎÇøÓò
-		 * @param[in] rct ÇøÓò
+		 * @brief ï¿½ï¿½ï¿½Ã¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		 * @param[in] rct ï¿½ï¿½ï¿½ï¿½
 		*/
 		void SetRect(RECT rct);
 

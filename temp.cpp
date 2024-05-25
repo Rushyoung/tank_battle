@@ -201,8 +201,8 @@ int main() {
 //    loadimage(&img_bullet, "D:/tankmissile.png"); // 加载子弹图片
 //
 //
-//    std::vector<Bullet> bullets; // 使用vector来存储子弹实例
 //
+//    std::vector<Bullet> bullets; // 使用vector来存储子弹实例
 //    while (true) {
 //
 //

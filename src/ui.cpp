@@ -451,7 +451,7 @@ public:
         );
         addButton(4, button5_4);
 
-        Button* button5_5 = new Button(563, 380, 100, 40, "churchil", [&]() {
+        Button* button5_5 = new Button(563, 380, 100, 40, "churchill", [&]() {
 
                                        }
         );
@@ -497,11 +497,11 @@ public:
     }
 };
 
-int main()
-{
-    Widget widget(800, 600);
-    widget.init();
-    widget.run();
-    widget.close();
-    return 0;
-}
+//int main()
+//{
+//    Widget widget(800, 600);
+//    widget.init();
+//    widget.run();
+//    widget.close();
+//    return 0;
+//}

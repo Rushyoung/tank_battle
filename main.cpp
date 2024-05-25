@@ -12,47 +12,122 @@
 #include "include/chanel.hpp"
 #include "src/ui.cpp"
 #include "HiEasyX.h"
+
+
+
+
+
+
+
 //temp
 int remote_amount;
 Tank_info local;
 hiex::Scene main_scene;
-//channel_map chan<Tank_info>::msg_set;
+hiex::Layer map_layer;
+hiex::Layer body_layer;
+hiex::Layer turret_layer;
+hiex::Canvas Map_canvas(MAP_X, MAP_Y);
+hiex::ImageBlock map_block(&Map_canvas);
+hiex::Canvas Screen;
+
+//channel_map<Tank_info> chan<Tank_info>::msg_set;
 MOUSEMSG _mouse;
-tank_data churchil_data(churchil);
+tank_data churchill_data(churchill);
 tank_data tiger_data(tiger);
 tank_data is2_data(is2);
 tank_data t34_85_data(t34_85);
 tank_data sherman_data(sherman);
+
+
+
+
+struct Tank_collection {
+    tank_data* data;
+    baseTank* tank_class;
+    tank_draw_data drawData;
+    std::thread tank_thread;
+    Tank_collection(tank_data* data, baseTank* tank_class)
+        : data(data), tank_class(tank_class), 
+          drawData(&data->body, &data->turret, &body_layer, &turret_layer, data->offset),
+          tank_thread(&baseTank::control, this->tank_class)
+          {tank_class->update_draw(&drawData);cerr << "update" << endl;}
+};
+
+Tank_collection* create_tank(tank_type t, int id, Ai_Type ai){
+    baseTank* tank_class = nullptr;
+    tank_data* data;
+    switch (t) {
+        case churchill:
+            data = &churchill_data;
+            break;
+        case sherman:
+            data = &sherman_data;
+            break;
+        case tiger:
+            data = &tiger_data;
+            break;
+        case is2:
+            data = &is2_data;
+            break;
+        case t34_85:
+            data = &t34_85_data;
+            break;
+    }
+    switch (ai) {
+        case Local:
+            tank_class = new Tank_local(random(0, MAP_X), random(0, MAP_Y), data->body_width/2,id, 0.1, t);
+            return new Tank_collection(data, tank_class);
+    }
+}
+
+
+
+
+
 int main() {
-
     // 初始化图形窗口
-    initgraph(600, 600);
-    hiex::Canvas c;
-    hiex::Canvas d;
-    hiex::Canvas e;
-    hiex::BindWindowCanvas(&c);
-    hiex::Scene sc;
-    hiex::Layer la, la2;
-    hiex::ImageBlock bl,bl2;
-    bl.SetCanvas(&d);
-    bl2.SetCanvas(&e);
 
-    bl.SetPos(200, 200);
-    e.Load_Image_Alpha(_T("../source/tiger_turret.png"), 0, 0, true, 0,0,255, false);
+    std::vector<Tank_collection*> tanks;
+    tanks.push_back(create_tank(is2, 1, Local));
+
+    std::thread r(&render);
+    r.join();
 
 
 
-    d.Load_Image_Alpha(_T("../source/tiger_body.png"), 0, 0, true, 0,0,255, false);
-//    d.RotateImage_Alpha(PI/2);
 
-    la.push_back(&bl);
-    la2.push_back(&bl2);
-    sc.push_back(&la);
-    sc.push_back(&la2);
-    BEGIN_TASK();
-            { sc.Render(c.GetImagePointer()); }
-    END_TASK();
-    REDRAW_WINDOW();
+
+//    hiex::Canvas c;
+//    hiex::Canvas d;
+//    hiex::Canvas e;
+//    hiex::BindWindowCanvas(&c);
+//    hiex::Scene sc;
+//    hiex::Layer la, la2;
+//    hiex::ImageBlock bl,bl2;
+//    bl.SetCanvas(&d);
+//    bl2.SetCanvas(&e);
+//
+//    bl.SetPos(600, 200);
+//    e.Load_Image_Alpha(_T("../source/tiger_turret.png"), 0, 0, true, 0,0,255, false);
+//
+//
+//
+//    d.Load_Image_Alpha(_T("../source/tiger_body.png"), 0, 0, true, 0,0,255, false);
+////    d.RotateImage_Alpha(PI/2);
+//
+//    la.push_back(&bl);
+//    la2.push_back(&bl2);
+//    sc.push_back(&la);
+//    sc.push_back(&la2);
+//    BEGIN_TASK();
+//            { sc.Render(c.GetImagePointer()); }
+//    END_TASK();
+//    REDRAW_WINDOW();
+//    la.remove_if([](hiex::ImageBlock* a){return a->bVisible;});
+//    BEGIN_TASK();
+//            { sc.Render(c.GetImagePointer()); }
+//    END_TASK();
+//    REDRAW_WINDOW();
 
 
 //    BEGIN_TASK();
@@ -90,10 +165,13 @@ int main() {
 //    putimage(100, 100, &img, SRCPAINT);
 //    rotate_draw(&img, &mask, PI/2, 100+img.getwidth()/2, 100+img.getheight()/2);
     // 暂停
-    system("pause");
+//    system("pause");
 
     // 关闭图形窗口
-    closegraph();
+
+    for (Tank_collection* tank : tanks) {
+        delete tank;
+    }
 }
 
 

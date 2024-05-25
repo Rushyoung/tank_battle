@@ -41,6 +41,34 @@ struct position{
 };
 double distance(const position& a, const position& b);
 
+struct draw_buffer{
+    double degree_now;
+    hiex::Canvas* dst;
+    hiex::ImageBlock* block;
+    draw_buffer(hiex::Canvas* dst, hiex::ImageBlock* block): dst(dst), block((block)), degree_now(0.0){}
+};
+
+/*
+ * @brief:需要先给imageblock分配空间
+ * */
+struct tank_draw_data{
+    int id;
+    int offset;
+    hiex::Canvas body;
+    hiex::Canvas turret;
+    hiex::ImageBlock body_block;
+    hiex::ImageBlock turret_block;
+    draw_buffer body_info;
+    draw_buffer turret_info;
+    tank_draw_data(hiex::Canvas* _body, hiex::Canvas* _turret, hiex::Layer* body_layer, hiex::Layer* turret_layer, int offset):
+            body(_body), turret(_turret),
+            body_block(&body), turret_block(&turret),
+            body_info(&body, &body_block), turret_info(&turret, &turret_block),
+            offset(offset){
+        body_layer->push_back(&body_block);
+        turret_layer->push_back(&turret_block);
+    }
+};
 
 struct Tank_info{
     Tank_info(Tank_info const &info): pos(info.pos) {}
@@ -49,6 +77,7 @@ struct Tank_info{
     double head_degree;
     double turret_degree;
     bool enable;
+
     Tank_info(): pos(-1, -1){enable = false;}
     Tank_info(struct position pos, double head_degree, double turret_degree, bool enable): pos(pos), head_degree(head_degree), turret_degree(turret_degree), enable(enable){}
     Tank_info& operator=(const Tank_info& other){
@@ -68,7 +97,7 @@ struct Tank_info{
 
 
 
-enum tank_type{churchil,is2,sherman,t34_85,tiger};
+enum tank_type{churchill,is2,sherman,t34_85,tiger};
 
 struct tank_data
 {
@@ -79,7 +108,7 @@ struct tank_data
     hiex::Canvas turret;
     tank_data(enum tank_type type){
         switch (type) {
-            case churchil:
+            case churchill:
                 body_width=150;
                 turret_width=150;
                 offset=5;
@@ -87,7 +116,7 @@ struct tank_data
                 turret.Load_Image_Alpha("../source/tank/churchill_turret.png");
                 //test
 
-                std::cerr << "load";
+
 //                if (original.getwidth() == 0 || original.getheight() == 0) {
 //                    std::cerr << "Failed to load image for original tank." << std::endl;
 //                }
@@ -139,4 +168,8 @@ struct tank_data
         }
     };
 };
+
+
+
+
 #endif //TANK_BATTLE_BASETYPE_HPP

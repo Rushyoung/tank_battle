@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include <WinSock2.h>
 #include <Windows.h>
 #include <WinUser.h>
 #include <graphics.h>
