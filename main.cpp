@@ -18,6 +18,11 @@ Tank_info local;
 hiex::Scene main_scene;
 //channel_map chan<Tank_info>::msg_set;
 MOUSEMSG _mouse;
+tank_data churchil_data(churchil);
+tank_data tiger_data(tiger);
+tank_data is2_data(is2);
+tank_data t34_85_data(t34_85);
+tank_data sherman_data(sherman);
 int main() {
 
     // 初始化图形窗口
