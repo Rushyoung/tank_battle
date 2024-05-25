@@ -13,6 +13,7 @@
 #include <WinUser.h>
 #include <vector>
 #include <thread>
+#include <shellapi.h>
 
 #ifdef _MSC_VER
 #pragma comment (lib, "Msimg32.lib")

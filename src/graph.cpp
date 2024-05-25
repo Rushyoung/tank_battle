@@ -19,6 +19,7 @@ void rotate_draw(IMAGE* img, hiex::Canvas* canvas, double angle, int centerX, in
 
     // 旋转图像和掩码
     HiEasyX::RotateImage_Alpha(img, Radians(angle));
+    //easyx废案
 //    rotateimage(mask, mask, Radians(angle), WHITE);
 
 //    // 使用 SRCAND ROP 代码将旋转后的掩码图像绘制到屏幕上
@@ -43,16 +44,13 @@ void render(){
         remote[i] = chan<Tank_info>("remote" + std::to_string(i)).receive();
     }
     local = chan<Tank_info>("local").receive();
+    struct draw_data{
+        double degree_now;
+        hiex::Canvas* dst;
+
+    };
     //render begin
-    BeginBatchDraw();
 
-
-
-
-
-
-
-    FlushBatchDraw();
 
 
 }
@@ -64,12 +62,19 @@ struct position map_convert_screen(position& base, position& origin){
     return (dst + (origin - base));
 }
 
-void draw_tank(IMAGE* body, IMAGE* body_mask, IMAGE* turret, IMAGE* turret_mask,double head_degree, double turret_degree,int center_x, int center_y,int turretOffsetX, int turretOffsetY){
+void draw_tank(hiex::ImageBlock *body, hiex::ImageBlock *turret, double head_degree, double turret_degree, int center_x,
+               int center_y, int body_width, int turret_width, int turretOffsetX, int turretOffsetY) {
     // 计算新的炮塔偏移量
     int newOffsetX = turretOffsetX * cos(Radians(head_degree)) - turretOffsetY * sin(Radians(head_degree));
     int newOffsetY = turretOffsetX * sin(Radians(head_degree)) + turretOffsetY * cos(Radians(head_degree));
 
     // 将 body 和 turret 绘制到屏幕上
+
+
+
+
+
+    //easyx ruined
 //    rotate_draw(body, body_mask, head_degree, center_x, center_y);
 //    rotate_draw(turret, turret_mask, turret_degree, center_x+newOffsetX, center_y+newOffsetY);
 }

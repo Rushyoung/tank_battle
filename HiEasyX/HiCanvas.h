@@ -797,8 +797,8 @@ namespace HiEasyX
 	public:
 		int x = 0, y = 0;					///< 图像显示在图层的位置
 		RECT rctCrop = { 0 };				///< 裁剪信息
-		bool bUseSrcAlpha = false;			///< 是否使用图像自身的 alpha 数据
-
+		bool bUseSrcAlpha = true;			///< 是否使用图像自身的 alpha 数据
+        //TODO: changed
 		bool isAlphaCalculated = false;		///< 图像色值是否已混合透明度（使用自身透明度时有效）
 
 		BYTE alpha = 255;					///< 绘制到图层时的叠加透明度

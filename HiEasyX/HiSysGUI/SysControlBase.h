@@ -1,6 +1,6 @@
 /**
  * @file	SysControlBase.h
- * @brief	HiSysGUI ¿Ø¼þ·ÖÖ§£º¿Ø¼þ»ù´¡
+ * @brief	HiSysGUI ï¿½Ø¼ï¿½ï¿½ï¿½Ö§ï¿½ï¿½ï¿½Ø¼ï¿½ï¿½ï¿½ï¿½ï¿½
  * @author	huidong
 */
 
@@ -14,7 +14,7 @@
 namespace HiEasyX
 {
 	/**
-	 * @brief Ö§³ÖµÄÏµÍ³¿Ø¼þÀàÐÍ
+	 * @brief Ö§ï¿½Öµï¿½ÏµÍ³ï¿½Ø¼ï¿½ï¿½ï¿½ï¿½ï¿½
 	*/
 	enum SysControlType
 	{
@@ -30,7 +30,7 @@ namespace HiEasyX
 	};
 
 	/**
-	 * @brief ÏµÍ³¿Ø¼þ»ù´¡
+	 * @brief ÏµÍ³ï¿½Ø¼ï¿½ï¿½ï¿½ï¿½ï¿½
 	*/
 	class SysControlBase : public Container
 	{
@@ -39,7 +39,7 @@ namespace HiEasyX
 		HFONT m_hFont = nullptr;
 
 		/**
-		 * @brief ÄÚ²¿Îö¹¹º¯Êý
+		 * @brief ï¿½Ú²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		*/
 		void Destory();
 
@@ -51,18 +51,18 @@ namespace HiEasyX
 		SysControlType m_type = SCT_Unknown;
 
 		/**
-		 * @brief ´´½¨¿Ø¼þ
-		 * @param[in] hParent			¸¸¿Ø¼þ 
-		 * @param[in] lpszClassName		´°¿ÚÀàÃû
-		 * @param[in] lpszWindowName	´°¿ÚÃû
-		 * @param[in] dwStyle			´°¿ÚÑùÊ½
-		 * @return ´°¿Ú¾ä±ú
+		 * @brief ï¿½ï¿½ï¿½ï¿½ï¿½Ø¼ï¿½
+		 * @param[in] hParent			ï¿½ï¿½ï¿½Ø¼ï¿½ 
+		 * @param[in] lpszClassName		ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		 * @param[in] lpszWindowName	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		 * @param[in] dwStyle			ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê½
+		 * @return ï¿½ï¿½ï¿½Ú¾ï¿½ï¿½
 		*/
 		HWND CreateControl(HWND hParent, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle);
 
 		/**
-		 * @brief Êµ¼Êµ÷ÓÃµÄ´´½¨¿Ø¼þº¯Êý£¨¸÷ÖÖ¿Ø¼þÊµÏÖ²»Í¬£¬µ«ÄÚ²¿¶¼µ÷ÓÃ CreateControl ´´½¨¿Ø¼þ£©
-		 * @param[in] hParent ¸¸¿Ø¼þ¾ä±ú
+		 * @brief Êµï¿½Êµï¿½ï¿½ÃµÄ´ï¿½ï¿½ï¿½ï¿½Ø¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¿Ø¼ï¿½Êµï¿½Ö²ï¿½Í¬ï¿½ï¿½ï¿½ï¿½ï¿½Ú²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ CreateControl ï¿½ï¿½ï¿½ï¿½ï¿½Ø¼ï¿½ï¿½ï¿½
+		 * @param[in] hParent ï¿½ï¿½ï¿½Ø¼ï¿½ï¿½ï¿½ï¿½
 		*/
 		virtual void RealCreate(HWND hParent) = 0;
 
@@ -75,27 +75,27 @@ namespace HiEasyX
 		void UpdateRect(RECT rctOld) override;
 
 		/**
-		 * @brief ¸üÐÂÏûÏ¢£¬´Ëº¯ÊýÎÞÐèÓÃ»§µ÷ÓÃ
-		 * @param[in] msg		ÐÂÏûÏ¢
-		 * @param[in] wParam	²ÎÊý
-		 * @param[in] lParam	²ÎÊý
-		 * @param[out] bRet ±ê¼ÇÊÇ·ñ·µ»ØÖµ
-		 * @return ²»¶¨·µ»ØÖµ
+		 * @brief ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½Ëºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½
+		 * @param[in] msg		ï¿½ï¿½ï¿½ï¿½Ï¢
+		 * @param[in] wParam	ï¿½ï¿½ï¿½ï¿½
+		 * @param[in] lParam	ï¿½ï¿½ï¿½ï¿½
+		 * @param[out] bRet ï¿½ï¿½ï¿½ï¿½Ç·ñ·µ»ï¿½Öµ
+		 * @return ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµ
 		*/
 		virtual LRESULT UpdateMessage(UINT msg, WPARAM wParam, LPARAM lParam, bool& bRet);
 
 		/**
 		 * @brief <pre>
-		 *		´´½¨¿Ø¼þ£¨´Ó¿Ø¼þ¶ÔÏó´´½¨³ö UI ÊµÌå£©
+		 *		ï¿½ï¿½ï¿½ï¿½ï¿½Ø¼ï¿½ï¿½ï¿½ï¿½Ó¿Ø¼ï¿½ï¿½ï¿½ï¿½ó´´½ï¿½ï¿½ï¿½ UI Êµï¿½å£©
 		 *
-		 *	×¢Òâ£º
-		 *		Í¬Ò»¸ö¿Ø¼þ¶ÔÏó²»ÄÜ·´¸´´´½¨ UI ÊµÌå
+		 *	×¢ï¿½â£º
+		 *		Í¬Ò»ï¿½ï¿½ï¿½Ø¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ü·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ UI Êµï¿½ï¿½
 		 * </pre>
 		 * 
-		 * @param[in] hParent	¸¸´°¿Ú¾ä±ú
-		 * @param[in] rct		¿Ø¼þÇøÓò
-		 * @param[in] strText	¿Ø¼þÎÄ±¾
-		 * @return ¿Ø¼þ´°¿Ú¾ä±ú
+		 * @param[in] hParent	ï¿½ï¿½ï¿½ï¿½ï¿½Ú¾ï¿½ï¿½
+		 * @param[in] rct		ï¿½Ø¼ï¿½ï¿½ï¿½ï¿½ï¿½
+		 * @param[in] strText	ï¿½Ø¼ï¿½ï¿½Ä±ï¿½
+		 * @return ï¿½Ø¼ï¿½ï¿½ï¿½ï¿½Ú¾ï¿½ï¿½
 		*/
 #ifdef UNICODE
 		HWND Create(HWND hParent, RECT rct, std::wstring strText = L"");
@@ -106,14 +106,14 @@ namespace HiEasyX
 #endif
 
 		/**
-		 * @brief ÒÆ³ý¿Ø¼þ
+		 * @brief ï¿½Æ³ï¿½ï¿½Ø¼ï¿½
 		*/
 		void Remove();
 
 		HWND GetHandle() const { return m_hWnd; }
 
 		/**
-		 * @brief »ñÈ¡´Ë¿Ø¼þÀàÐÍ
+		 * @brief ï¿½ï¿½È¡ï¿½Ë¿Ø¼ï¿½ï¿½ï¿½ï¿½ï¿½
 		*/
 		SysControlType GetControlType() const { return m_type; }
 
@@ -152,7 +152,7 @@ namespace HiEasyX
 	};
 
 	/**
-	 * @brief ×Ô¶¯·ÖÅä¿Ø¼þ ID
+	 * @brief ï¿½Ô¶ï¿½ï¿½ï¿½ï¿½ï¿½Ø¼ï¿½ ID
 	*/
 	int AllocID();
 }

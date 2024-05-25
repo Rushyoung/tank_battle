@@ -127,11 +127,11 @@ namespace HiEasyX
 
 	bool SysControlBase::IsFocused()
 	{
-		DWORD SelfThreadId = GetCurrentThreadId();						// »ñÈ¡×ÔÉíÏß³Ì ID
-		DWORD ForeThreadId = GetWindowThreadProcessId(m_hParent, NULL);	// ¸ù¾Ý´°¿Ú¾ä±ú»ñÈ¡Ïß³Ì ID
-		AttachThreadInput(ForeThreadId, SelfThreadId, true);			// ¸½¼Óµ½Ïß³Ì
-		HWND hWnd = GetFocus();											// »ñÈ¡¾ßÓÐÊäÈë½¹µãµÄ´°¿Ú¾ä±ú
-		AttachThreadInput(ForeThreadId, SelfThreadId, false);			// È¡Ïû¸½¼Óµ½Ïß³Ì
+		DWORD SelfThreadId = GetCurrentThreadId();						// ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ß³ï¿½ ID
+		DWORD ForeThreadId = GetWindowThreadProcessId(m_hParent, NULL);	// ï¿½ï¿½ï¿½Ý´ï¿½ï¿½Ú¾ï¿½ï¿½ï¿½ï¿½È¡ï¿½ß³ï¿½ ID
+		AttachThreadInput(ForeThreadId, SelfThreadId, true);			// ï¿½ï¿½ï¿½Óµï¿½ï¿½ß³ï¿½
+		HWND hWnd = GetFocus();											// ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ë½¹ï¿½ï¿½Ä´ï¿½ï¿½Ú¾ï¿½ï¿½
+		AttachThreadInput(ForeThreadId, SelfThreadId, false);			// È¡ï¿½ï¿½ï¿½ï¿½ï¿½Óµï¿½ï¿½ß³ï¿½
 		return hWnd == GetHandle();
 	}
 

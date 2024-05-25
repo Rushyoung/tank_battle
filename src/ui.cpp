@@ -8,77 +8,7 @@
 
 using namespace std;
 
-enum tank_type{churchil,is2,sherman,t34_85,tiger};
 
-struct tank_data
-{
-    int offsite;
-    int body_width;
-    int turret_width;
-    hiex::Canvas body;
-    hiex::Canvas turret;
-    tank_data(enum tank_type type){
-        switch (type) {
-            case churchil:
-                body_width=150;
-                turret_width=150;
-                offsite=5;
-                body.Load_Image_Alpha("../source/tank/churchill_body.png");
-                turret.Load_Image_Alpha("../source/tank/churchill_turret.png");
-                //test
-/*
-                std::cerr << "load";
-                if (original.getwidth() == 0 || original.getheight() == 0) {
-                    std::cerr << "Failed to load image for original tank." << std::endl;
-                }
-                if (original_mask.getwidth() == 0 || original_mask.getheight() == 0) {
-                    std::cerr << "Failed to load image for original tank mask." << std::endl;
-                }
-                if (body.getwidth() == 0 || body.getheight() == 0) {
-                    std::cerr << "Failed to load image for tank body." << std::endl;
-                }
-                if (body_mask.getwidth() == 0 || body_mask.getheight() == 0) {
-                    std::cerr << "Failed to load image for tank body mask." << std::endl;
-                }
-                if (turret.getwidth() == 0 || turret.getheight() == 0) {
-                    std::cerr << "Failed to load image for tank turret." << std::endl;
-                }
-                if (turret_mask.getwidth() == 0 || turret_mask.getheight() == 0) {
-                    std::cerr << "Failed to load image for tank turret mask." << std::endl;
-                }
-
-                break;
-            case is2:
-                body_width=150;
-                turret_width=240;
-                offsite=15;
-                body.Load_Image_Alpha("../source/tank/is2_body.png");
-                turret.Load_Image_Alpha("../source/tank/is2_turret.png");
-                break;
-            case sherman:
-                body_width=150;
-                turret_width=150;
-                offsite=0;
-                body.Load_Image_Alpha("../source/tank/sherman_body.png");
-                turret.Load_Image_Alpha("../source/tank/sherman_turret.png");
-                break;
-            case t34_85:
-                body_width=150;
-                turret_width=240;
-                offsite=18;
-                body.Load_Image_Alpha("../source/tank/t34_85_body.png");
-                turret.Load_Image_Alpha("../source/tank/t34_85_turret.png");
-                break;
-            case tiger:
-                body_width=150;
-                turret_width=240;
-                offsite=0;
-                body.Load_Image_Alpha("../source/tank/tiger_body.png");
-                turret.Load_Image_Alpha("../source/tank/tiger_turret.png");
-                break;
-        }
-    };
-};
 
 class Button
 {

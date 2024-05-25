@@ -15,25 +15,35 @@
 //temp
 int remote_amount;
 Tank_info local;
-
+hiex::Scene main_scene;
 //channel_map chan<Tank_info>::msg_set;
 MOUSEMSG _mouse;
 int main() {
 
     // 初始化图形窗口
     initgraph(600, 600);
-    hiex::Canvas c(600, 600);
-    hiex::Canvas d(300, 200);
+    hiex::Canvas c;
+    hiex::Canvas d;
+    hiex::Canvas e;
     hiex::BindWindowCanvas(&c);
     hiex::Scene sc;
-    hiex::Layer la;
-    hiex::ImageBlock bl;
+    hiex::Layer la, la2;
+    hiex::ImageBlock bl,bl2;
     bl.SetCanvas(&d);
-    bl.bUseSrcAlpha = true;
-    bl.SetPos(10, 10);
-    d.Load_Image_Alpha(_T("../source/tank/churchill.png"), 100, 100, true, 0,0,255, false);
+    bl2.SetCanvas(&e);
+
+    bl.SetPos(200, 200);
+    e.Load_Image_Alpha(_T("../source/tiger_turret.png"), 0, 0, true, 0,0,255, false);
+
+
+
+    d.Load_Image_Alpha(_T("../source/tiger_body.png"), 0, 0, true, 0,0,255, false);
+//    d.RotateImage_Alpha(PI/2);
+
     la.push_back(&bl);
+    la2.push_back(&bl2);
     sc.push_back(&la);
+    sc.push_back(&la2);
     BEGIN_TASK();
             { sc.Render(c.GetImagePointer()); }
     END_TASK();
@@ -62,7 +72,7 @@ int main() {
 ////    cout << "a" << a.turret.getwidth() << endl;
 //    loadimage(&bg, _T("D:/temp/tank/temp.png"));
 ////    putimage(100,100,&bg);
-//    draw_tank(&a.body, &a.body_mask, &a.turret, &a.turret_mask, 90.0, 0.0, 500, 500, a.offsite);
+//    draw_tank(&a.body, &a.body_mask, &a.turret, &a.turret_mask, 90.0, 0.0, 500, 500, a.offset);
 //    FlushBatchDraw();
 
 //    loadimage(&img, _T("D:/temp/tank/churchill.png"));
