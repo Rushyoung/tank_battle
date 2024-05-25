@@ -45,6 +45,20 @@ int probability_judge(int for_con){
                 return 2;
             }
         }
+        else{
+            if(random_number<=FOR_TURN_CRITICAL_VALUE){
+                for_condition=0;
+                return 0;//返回值0为前进，1为左转，2为右转
+            }
+            else if(random_number<=FOR_TURN_CRITICAL_VALUE/2+5){
+                for_condition=1;
+                return 1;
+            }
+            else{
+                for_condition=1;
+                return 2;
+            }
+        }
     }
 }
 
