@@ -1,37 +1,37 @@
 /**
  * @file	HiMusicMCI.h
- * @brief	HiEasyX ¿âµÄÉùÒôÄ£¿é
- * @author	ÓÆÔ¶µÄ²Ôñ· <2237505658@qq.com>, huidong£¨ÐÞ¸Ä£©
+ * @brief	HiEasyX ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½
+ * @author	ï¿½ï¿½Ô¶ï¿½Ä²ï¿½ï¿½ <2237505658@qq.com>, huidongï¿½ï¿½ï¿½Þ¸Ä£ï¿½
 */
 
 #pragma once
 
 #include <Windows.h>
-#include <mmsystem.h>
+
 namespace HiEasyX
 {
 	/**
 	 * @brief <pre>
-	 *		MusicMCI£¨ÒôÀÖ²¥·Å²Ù×÷²ã£©
-	 *		Ö§³Ö²¥·Å¡¢ÔÝÍ£¡¢ÉèÖÃÒôÁ¿¡¢»ñÈ¡²¥·ÅÊ±¼äµÈ²Ù×÷
+	 *		MusicMCIï¿½ï¿½ï¿½ï¿½ï¿½Ö²ï¿½ï¿½Å²ï¿½ï¿½ï¿½ï¿½ã£©
+	 *		Ö§ï¿½Ö²ï¿½ï¿½Å¡ï¿½ï¿½ï¿½Í£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½È²ï¿½ï¿½ï¿½
 	 * </pre>
 	*/
 	class MusicMCI
 	{
 	private:
-		MCIDEVICEID nDeviceID;									///< Éè±¸ID
+		MCIDEVICEID nDeviceID;									///< ï¿½è±¸ID
 
 	public:
-		MusicMCI()noexcept;										///< Ä¬ÈÏ¹¹Ôìº¯Êý
-		virtual ~MusicMCI();									///< ÐéÎö¹¹º¯Êý
-		bool open(LPCTSTR music)noexcept;						///< ´ò¿ªÒôÀÖ
-		bool play()noexcept;									///< ²¥·ÅÒôÀÖ
-		bool pause()noexcept;									///< ÔÝÍ£ÒôÀÖ
-		bool stop()noexcept;									///< Í£Ö¹²¥·Å
-		bool close()noexcept;									///< ¹Ø±ÕÒôÀÖ
-		bool getCurrentTime(DWORD& pos)noexcept;				///< »ñÈ¡µ±Ç°²¥·ÅÊ±¼ä
-		bool getTotalTime(DWORD& time)noexcept;					///< »ñÈ¡ÒôÀÖ×ÜÊ±³¤
-		bool setVolume(size_t volume)noexcept;					///< ÉèÖÃÒôÁ¿´óÐ¡
-		bool setStartTime(size_t start)noexcept;				///< ÉèÖÃ²¥·ÅÎ»ÖÃ
+		MusicMCI()noexcept;										///< Ä¬ï¿½Ï¹ï¿½ï¿½ìº¯ï¿½ï¿½
+		virtual ~MusicMCI();									///< ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		bool open(LPCTSTR music)noexcept;						///< ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		bool play()noexcept;									///< ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		bool pause()noexcept;									///< ï¿½ï¿½Í£ï¿½ï¿½ï¿½ï¿½
+		bool stop()noexcept;									///< Í£Ö¹ï¿½ï¿½ï¿½ï¿½
+		bool close()noexcept;									///< ï¿½Ø±ï¿½ï¿½ï¿½ï¿½ï¿½
+		bool getCurrentTime(DWORD& pos)noexcept;				///< ï¿½ï¿½È¡ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
+		bool getTotalTime(DWORD& time)noexcept;					///< ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
+		bool setVolume(size_t volume)noexcept;					///< ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¡
+		bool setStartTime(size_t start)noexcept;				///< ï¿½ï¿½ï¿½Ã²ï¿½ï¿½ï¿½Î»ï¿½ï¿½
 	};
 };
