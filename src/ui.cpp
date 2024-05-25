@@ -335,7 +335,7 @@ public:
 
     void init()
     {
-        initgraph(width, height);
+        hiex::Window wnd(width, height);
 
         IMAGE* page1 = new IMAGE;
         loadimage(page1, "../source/ui/OIP-C.png",width,height);
@@ -497,11 +497,11 @@ public:
     }
 };
 
-//int ui_main()
-//{
-//    Widget widget(800, 600);
-//    widget.init();
-//    widget.run();
-//    widget.close();
-//    return 0;
-//}
+int main()
+{
+    Widget widget(800, 600);
+    widget.init();
+    widget.run();
+    widget.close();
+    return 0;
+}
