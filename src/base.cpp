@@ -5,6 +5,50 @@
 #include "../include/grap.hpp"
 
 #define ROTATE_SPEED 0.1
+#define FOR_STRAIGHT_CRITICAL_VALUE 6.0
+#define FOR_TURN_CRITICAL_VALUE 8.0
+#define FIRST_DECISION 5
+
+int whether_first=0;//0为第一次，1为后续
+
+int for_condition=0;//0为前进，1为转弯
+
+int probability_judge(int for_con){
+    //初次时判断AI前进还是转弯
+    if(whether_first==0){
+        int random_number = random(1,10);
+        if(random_number<=FIRST_DECISION){
+            whether_first=1;
+            for_condition=0;
+            return probability_judge(for_condition);
+        }else{
+            whether_first=1;
+            for_condition=1;
+            return probability_judge(for_condition);
+        }
+    }
+    //后续判断
+    else{
+        for_con=for_condition;
+        int random_number = random(1,10);
+        if(for_con==0){
+            if(random_number<=FOR_STRAIGHT_CRITICAL_VALUE){
+                for_condition=0;
+                return 0;//返回值0为前进，1为左转，2为右转
+            }
+            else if(random_number<=FOR_STRAIGHT_CRITICAL_VALUE/2+5){
+                for_condition=1;
+                return 1;
+            }
+            else{
+                for_condition=1;
+                return 2;
+            }
+        }
+    }
+}
+
+
 
 void Tank_local::control(double _degree) {
     while(true){
@@ -86,8 +130,11 @@ position Bullet::get_Bullet_pos() {
 void Tank_ai::control(double _degree) {
     bool changed=false;
     while(true) {
+
+        int move_judge=probability_judge(for_condition);
+
         //move forward
-        {
+        if(move_judge==0){
             if (pos.x + speed * cos(Radians(head_degree)) >= MAP_X ||
                 pos.x + speed * cos(Radians(head_degree)) <= 0 ||
                 pos.y + speed * sin(Radians(head_degree)) >= MAP_Y ||
@@ -99,21 +146,8 @@ void Tank_ai::control(double _degree) {
                 changed = true;
             }
         }
-        //move backward
-        {
-            if (pos.x - speed * cos(Radians(head_degree)) >= MAP_X ||
-                pos.x - speed * cos(Radians(head_degree)) <= 0 ||
-                pos.y - speed * sin(Radians(head_degree)) >= MAP_Y ||
-                pos.y - speed * sin(Radians(head_degree)) <= 0) {
-                return;
-            } else {
-                pos.x -= speed * cos(Radians(head_degree));
-                pos.y -= speed * sin(Radians(head_degree));
-                changed = true;
-            }
-        }
         //rotate+，顺时针旋转
-        {
+        else if(move_judge==1){
             head_degree += ROTATE_SPEED;
             while (head_degree >= 360) {
                 head_degree -= 360;
@@ -121,7 +155,7 @@ void Tank_ai::control(double _degree) {
             changed = true;
         }
         //rotate-，逆时针旋转
-        {
+        else{
             head_degree -= ROTATE_SPEED;
             while (head_degree < 0) {
                 head_degree += 360;
