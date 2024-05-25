@@ -13,41 +13,20 @@ enum tank_type{churchil,is2,sherman,t34_85,tiger};
 struct tank_data
 {
     int offsite;
-    int body_x;
-    int body_y;
     int body_width;
-    int turret_x;
-    int turret_y;
     int turret_width;
-    int turret_center_x;
-    int turret_center_y;
     hiex::Canvas body;
     hiex::Canvas turret;
-    hiex::Canvas original;
-    hiex::Canvas body_mask;
-    hiex::Canvas turret_mask;
-    hiex::Canvas original_mask;
     tank_data(enum tank_type type){
         switch (type) {
             case churchil:
-                offsite=0;
-                body_x=45;
-                body_y=3;
                 body_width=150;
-                turret_x=94;
-                turret_y=128;
-                turret_width=90;
-                turret_center_x=125;
-                turret_center_y=174;
-                original.Load_Image_Alpha("../source/tank/churchill.png");
-                original_mask.Load_Image_Alpha("../source/tank/churchill_mask.png");
-//                cout << body.getwidth() << endl;
-                body = hiex::Canvas(body_width,body_width,BLACK);
-//                cout << body.getwidth() << endl;
-                body_mask = hiex::Canvas(body_width,body_width);
-                turret = hiex::Canvas(turret_width,turret_width);
-                turret_mask = hiex::Canvas(turret_width,turret_width);
+                turret_width=150;
+                offsite=5;
+                body.Load_Image_Alpha("../source/tank/churchill_body.png");
+                turret.Load_Image_Alpha("../source/tank/churchill_turret.png");
                 //test
+/*
                 std::cerr << "load";
                 if (original.getwidth() == 0 || original.getheight() == 0) {
                     std::cerr << "Failed to load image for original tank." << std::endl;
@@ -67,75 +46,36 @@ struct tank_data
                 if (turret_mask.getwidth() == 0 || turret_mask.getheight() == 0) {
                     std::cerr << "Failed to load image for tank turret mask." << std::endl;
                 }
+*/
 
                 break;
             case is2:
-                offsite=12;
-                body_x=51;
-                body_y=5;
-                body_width=145;
-                turret_x=110;
-                turret_y=110;
-                turret_width=140;
-                turret_center_x=141;
-                turret_center_y=176;
-                original.Load_Image_Alpha("../source/tank/is2.png");
-                original_mask.Load_Image_Alpha("../source/tank/is2_mask.png");
-                body = hiex::Canvas(body_width,body_width);
-                body_mask = hiex::Canvas(body_width,body_width);
-                turret = hiex::Canvas(turret_width,turret_width);
-                turret_mask = hiex::Canvas(turret_width,turret_width);
+                body_width=150;
+                turret_width=240;
+                offsite=15;
+                body.Load_Image_Alpha("../source/tank/is2_body.png");
+                turret.Load_Image_Alpha("../source/tank/is2_turret.png");
                 break;
             case sherman:
-                offsite=2;
-                body_x=67;
-                body_y=20;
-                body_width=115;
-                turret_x=91;
-                turret_y=119;
-                turret_width=111;
-                turret_center_x=124;
-                turret_center_y=175;
-                original.Load_Image_Alpha("../source/tank/sherman.png");
-                original_mask.Load_Image_Alpha("../source/tank/sherman_mask.png");
-                body = hiex::Canvas(body_width,body_width);
-                body_mask = hiex::Canvas(body_width,body_width);
-                turret = hiex::Canvas(turret_width,turret_width);
-                turret_mask = hiex::Canvas(turret_width,turret_width);
+                body_width=150;
+                turret_width=150;
+                offsite=0;
+                body.Load_Image_Alpha("../source/tank/sherman_body.png");
+                turret.Load_Image_Alpha("../source/tank/sherman_turret.png");
                 break;
             case t34_85:
-                offsite=10;
-                body_x=52;
-                body_y=0;
                 body_width=150;
-                turret_x=104;
-                turret_y=96;
-                turret_width=146;
-                turret_center_x=140;
-                turret_center_y=177;
-                original.Load_Image_Alpha("../source/tank/t34_85.png");
-                original_mask.Load_Image_Alpha("../source/tank/t34_85_mask.png");
-                body = hiex::Canvas(body_width,body_width);
-                body_mask = hiex::Canvas(body_width,body_width);
-                turret = hiex::Canvas(turret_width,turret_width);
-                turret_mask = hiex::Canvas(turret_width,turret_width);
+                turret_width=240;
+                offsite=18;
+                body.Load_Image_Alpha("../source/tank/t34_85_body.png");
+                turret.Load_Image_Alpha("../source/tank/t34_85_turret.png");
                 break;
             case tiger:
-                offsite=2;
-                body_x=44;
-                body_y=2;
-                body_width=156;
-                turret_x=84;
-                turret_y=116;
-                turret_width=116;
-                turret_center_x=127;
-                turret_center_y=176;
-                original.Load_Image_Alpha("../source/tank/tiger.png");
-                original_mask.Load_Image_Alpha("../source/tank/tiger_mask.png");
-                body = hiex::Canvas(body_width,body_width);
-                body_mask = hiex::Canvas(body_width,body_width);
-                turret = hiex::Canvas(turret_width,turret_width);
-                turret_mask = hiex::Canvas(turret_width,turret_width);
+                body_width=150;
+                turret_width=240;
+                offsite=0;
+                body.Load_Image_Alpha("../source/tank/tiger_body.png");
+                turret.Load_Image_Alpha("../source/tank/tiger_turret.png");
                 break;
         }
     };
@@ -469,7 +409,7 @@ public:
         initgraph(width, height);
 
         IMAGE* page1 = new IMAGE;
-        loadimage(page1, "source/ui/OIP-C.png",width,height);
+        loadimage(page1, "../source/ui/OIP-C.png",width,height);
 
         addPage(page1);
 
@@ -487,7 +427,7 @@ public:
         addButton(0, button1_2);
 
         IMAGE*page2 = new IMAGE;
-        loadimage(page2, "source/ui/OIP-C.png",width,height);
+        loadimage(page2, "../source/ui/OIP-C.png",width,height);
 
         addPage(page2);
 
@@ -509,7 +449,7 @@ public:
         addButton(1, button2_3);
 
         IMAGE* page3 = new IMAGE;
-        loadimage(page3, "source/ui/OIP-JOIN.png",width,height);
+        loadimage(page3, "../source/ui/OIP-JOIN.png",width,height);
         addPage(page3);
 
         TextBox* textbox3_1 = new TextBox(220, 300, 300, 30, 10);
@@ -533,7 +473,7 @@ public:
 
         // 创建页面2
         IMAGE* page4 = new IMAGE;
-        loadimage(page4, "source/ui/OIP-CREATE.png",width,height);
+        loadimage(page4, "../source/ui/OIP-CREATE.png",width,height);
 
         addPage(page4);
 
@@ -559,7 +499,7 @@ public:
 
         //创建页面3
         auto* page5 = new IMAGE;
-        loadimage(page5, "source/ui/OIP.png",width,height);
+        loadimage(page5, "../source/ui/OIP.png",width,height);
         addPage(page5);
 
         Button* button5_1 = new Button(225, 276, 100, 40, "tiger", [&]() {
@@ -628,7 +568,7 @@ public:
     }
 };
 
-int _main()
+int main()
 {
     Widget widget(800, 600);
     widget.init();
