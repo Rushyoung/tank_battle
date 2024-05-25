@@ -1,17 +1,17 @@
 /**
  * @file	HiDef.h
- * @brief	HiEasyX ©Б╣деДжц╤╗рЕ
+ * @brief	HiEasyX О©╫О©╫О©╫О©╫О©╫О©╫ц╤О©╫О©╫О©╫
  * @author	huidong
 */
 
-// ╟Ф╠╬╤╗рЕ
+// О©╫Ф╠╬О©╫О©╫О©╫О©╫
 #define _HIEASYX_VER_STR_	_T("Ver 0.4.1")
 
-// й╧сцт╜иЗ EasyX ╢╟©зё╗д╛хон╙ HiWindowё╘
+// й╧О©╫О©╫т╜О©╫О©╫ EasyX О©╫О©╫О©╫зёО©╫д╛О©╫О©╫н╙ HiWindowО©╫О©╫
 //#define _NATIVE_EASYX_
 
-// х║оШ Release дёй╫╣дЁлпРфТ╤╞╤╞╩╜
-//#define _NO_START_ANIMATION_
+// х║О©╫О©╫ Release дёй╫О©╫дЁО©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫
+#define _NO_START_ANIMATION_
 
-// х║оШо╣мЁ©ь╪Ч╣дож╢ЗяЫй╫ё╗╫Жтз MSVC ╠ЮрКфВоб©иртиХжцё╘
+// х║О©╫О©╫о╣мЁО©╫ь╪О©╫О©╫О©╫О©╫ж╢О©╫О©╫О©╫й╫О©╫О©╫О©╫О©╫О©╫О©╫ MSVC О©╫О©╫О©╫О©╫О©╫О©╫О©╫б©О©╫О©╫О©╫О©╫О©╫О©╫цёО©╫
 //#define _NO_MORDEN_SYSCTRL_

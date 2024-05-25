@@ -46,7 +46,6 @@ struct tank_data
                 if (turret_mask.getwidth() == 0 || turret_mask.getheight() == 0) {
                     std::cerr << "Failed to load image for tank turret mask." << std::endl;
                 }
-*/
 
                 break;
             case is2:
@@ -568,11 +567,11 @@ public:
     }
 };
 
-int main()
-{
-    Widget widget(800, 600);
-    widget.init();
-    widget.run();
-    widget.close();
-    return 0;
-}
+//int ui_main()
+//{
+//    Widget widget(800, 600);
+//    widget.init();
+//    widget.run();
+//    widget.close();
+//    return 0;
+//}
