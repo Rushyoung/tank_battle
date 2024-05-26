@@ -16,8 +16,10 @@ void rotate_draw(draw_buffer *buffer, double angle, int x, int y) {
     // 设置坐标系的原点为旋转中心
 //    setorigin(centerX, centerY);
     buffer->block->SetPos(x - imgCenterX, y - imgCenterY);
-//    cout << "center" << x - imgCenterX << std::endl;
+
+    cout << "center" << x - imgCenterX << std::endl;
     // 旋转图像和掩码
+    cout << "rotate" << angle - buffer->degree_now << std::endl;
     buffer->dst->RotateImage_Alpha(angle - buffer->degree_now);
     buffer->degree_now = angle;
 
@@ -68,10 +70,16 @@ void render(){
         position temp(0, 0);
         temp = position(0, 0);
         temp = position(SCREEN_LENGTH/2, SCREEN_WIDTH/2) - local.pos;
-        draw_tank(local_draw, local.head_degree, local.turret_degree, map_convert_screen(local.pos, local.pos).x,
-                  map_convert_screen(local.pos, local.pos).y,
-                  local_draw->offset, 0);
+
         if (wnd.BeginTask()) {
+
+//            draw_tank(local_draw, local.head_degree, local.turret_degree, map_convert_screen(local.pos, local.pos).x,
+//                      map_convert_screen(local.pos, local.pos).y,
+//                      local_draw->offset, 0);
+
+            draw_tank(local_draw, 0, i++, map_convert_screen(local.pos, local.pos).x,
+                      map_convert_screen(local.pos, local.pos).y,
+                      local_draw->offset, 0);
 
 
 //            map_block.SetPos(-2000,-2000);
@@ -86,7 +94,8 @@ void render(){
             wnd.Redraw();
         }
 //        hiex::DelayFPS(60);
-        std::this_thread::sleep_for(millisecond(FLASH_TIME));
+//        std::this_thread::sleep_for(millisecond(FLASH_TIME));
+        std::this_thread::sleep_for(millisecond(1000));
     }
 
 
@@ -99,22 +108,34 @@ position map_convert_screen(position& base, position& origin){
     return (dst + (origin - base));
 }
 
-void draw_tank(tank_draw_data* buffer, double head_degree, double turret_degree, int center_x, int center_y,  int turretOffsetX, int turretOffsetY) {
-    // 计算新的炮塔偏移量
-//    cout << "ddd" << head_degree << std::endl;
-    int newOffsetX = turretOffsetX * cos(head_degree) - turretOffsetY * sin(head_degree);
-//    int newOffsetY = turretOffsetX * sin(head_degree) + turretOffsetY * cos(head_degree);
+ void draw_tank(tank_draw_data* buffer, double head_degree, double turret_degree, int center_x, int center_y,  int turretOffsetX, int turretOffsetY) {
+     // 计算新的炮塔偏移量
+ //    cout << "ddd" << head_degree << std::endl;
+     int newOffsetX = turretOffsetX * cos(head_degree) - turretOffsetY * sin(head_degree);
+ //    int newOffsetY = turretOffsetX * sin(head_degree) + turretOffsetY * cos(head_degree);
 
-    // 将 body 和 turret 绘制到屏幕上
-
-
+     // 将 body 和 turret 绘制到屏幕上
 
 
 
-    //easyx ruined
-    rotate_draw(&buffer->body_info, head_degree, center_x, center_y);
-    rotate_draw(&buffer->turret_info,  turret_degree, center_x+newOffsetX, center_y);
-}
+
+
+     //easyx ruined
+     rotate_draw(&buffer->body_info, head_degree, center_x, center_y);
+     rotate_draw(&buffer->turret_info,  turret_degree, center_x+newOffsetX, center_y);
+ }
+
+
+//void draw_tank(tank_draw_data* buffer, double head_degree, double turret_degree, int center_x, int center_y,  int turretOffsetX, int turretOffsetY) {
+//    // 计算新的炮塔偏移量
+//    int newOffsetX = turretOffsetX * cos(head_degree) - turretOffsetY * sin(head_degree);
+//
+//    // 将 body 和 turret 绘制到屏幕上
+//    rotate_draw(&buffer->body_info, head_degree, center_x + buffer->body_info.dst->getwidth() / 2, center_y + buffer->body_info.dst->getheight() / 2);
+//    rotate_draw(&buffer->turret_info,  turret_degree, center_x + newOffsetX + buffer->turret_info.dst->getwidth() / 2, center_y + buffer->turret_info.dst->getheight() / 2);
+//}
+
+
 void tank_turret(IMAGE* original, IMAGE* body, IMAGE* turret,
                  position body_pos, position turret_pos,
                  int bodyWidth, int turretWidth) {

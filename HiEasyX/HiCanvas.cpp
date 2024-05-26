@@ -80,17 +80,61 @@ namespace HiEasyX
 		}
 	}
 
+
+
+
+DWORD BilinearInterpolation(DWORD color1, DWORD color2, DWORD color3, DWORD color4, float dx, float dy) {
+	BYTE a1 = (color1 >> 24) & 0xFF;
+	BYTE r1 = (color1 >> 16) & 0xFF;
+	BYTE g1 = (color1 >> 8) & 0xFF;
+	BYTE b1 = color1 & 0xFF;
+
+	BYTE a2 = (color2 >> 24) & 0xFF;
+	BYTE r2 = (color2 >> 16) & 0xFF;
+	BYTE g2 = (color2 >> 8) & 0xFF;
+	BYTE b2 = color2 & 0xFF;
+
+	BYTE a3 = (color3 >> 24) & 0xFF;
+	BYTE r3 = (color3 >> 16) & 0xFF;
+	BYTE g3 = (color3 >> 8) & 0xFF;
+	BYTE b3 = color3 & 0xFF;
+
+	BYTE a4 = (color4 >> 24) & 0xFF;
+	BYTE r4 = (color4 >> 16) & 0xFF;
+	BYTE g4 = (color4 >> 8) & 0xFF;
+	BYTE b4 = color4 & 0xFF;
+
+	float a = a1 * (1 - dx) * (1 - dy) + a2 * dx * (1 - dy) + a3 * (1 - dx) * dy + a4 * dx * dy;
+	float r = r1 * (1 - dx) * (1 - dy) + r2 * dx * (1 - dy) + r3 * (1 - dx) * dy + r4 * dx * dy;
+	float g = g1 * (1 - dx) * (1 - dy) + g2 * dx * (1 - dy) + g3 * (1 - dx) * dy + g4 * dx * dy;
+	float b = b1 * (1 - dx) * (1 - dy) + b2 * dx * (1 - dy) + b3 * (1 - dx) * dy + b4 * dx * dy;
+
+	return ((int)a << 24) | ((int)r << 16) | ((int)g << 8) | (int)b;
+}
+
+
+
+
 	IMAGE RotateImage_Alpha(IMAGE* pImg, double radian, COLORREF bkcolor)
 	{
-		radian = -radian;														// 由于 y 轴翻转，旋转角度需要变负
-		float fSin = (float)sin(radian), fCos = (float)cos(radian);				// 存储三角函数值
+		radian = -radian; // 由于 y 轴翻转，旋转角度需要变负
+		float fSin = (float)sin(radian), fCos = (float)cos(radian); // 存储三角函数值
 		float fNSin = (float)sin(-radian), fNCos = (float)cos(-radian);
-		int left = 0, top = 0, right = 0, bottom = 0;							// 旋转后图像顶点
+		int left = 0, top = 0, right = 0, bottom = 0; // 旋转后图像顶点
 		int w, h;
 		GetImageSize(pImg, &w, &h);
 		DWORD* pBuf = GetImageBuffer(pImg);
-		POINT points[4] = { { 0, 0 },{ w, 0 },{ 0, h },{ w, h } };				// 存储图像顶点
-		for (int j = 0; j < 4; j++)												// 旋转图像顶点，搜索旋转后的图像边界
+		POINT points[4] = { { 0, 0 },{ w, 0 },{ 0, h },{ w, h } }; // 存储图像顶点
+
+		// 平移图像的原点到图像中心
+		int centerX = w / 2;
+		int centerY = h / 2;
+		for (int j = 0; j < 4; j++) {
+			points[j].x -= centerX;
+			points[j].y -= centerY;
+		}
+
+		for (int j = 0; j < 4; j++) // 旋转图像顶点，搜索旋转后的图像边界
 		{
 			points[j] = {
 				(int)(points[j].x * fCos - points[j].y * fSin),
@@ -102,31 +146,125 @@ namespace HiEasyX
 			if (points[j].y < points[bottom].y)	bottom = j;
 		}
 
-		int nw = points[right].x - points[left].x;								// 旋转后的图像尺寸
+		int nw = points[right].x - points[left].x; // 旋转后的图像尺寸
 		int nh = points[top].y - points[bottom].y;
 		int nSize = nw * nh;
-		int offset_x = points[left].x < 0 ? points[left].x : 0;					// 旋转后图像超出第一象限的位移（据此调整图像位置）
+		int offset_x = points[left].x < 0 ? points[left].x : 0; // 旋转后图像超出第一象限的位移（据此调整图像位置）
 		int offset_y = points[bottom].y < 0 ? points[bottom].y : 0;
 
 		IMAGE img(nw, nh);
 		DWORD* pNewBuf = GetImageBuffer(&img);
-		if (bkcolor != BLACK)													// 设置图像背景色
+		if (bkcolor != BLACK) // 设置图像背景色
 			for (int i = 0; i < nSize; i++)
 				pNewBuf[i] = BGR(bkcolor);
 
-		for (int i = offset_x, ni = 0; ni < nw; i++, ni++)						// i 用于映射原图像坐标，ni 用于定位旋转后图像坐标
+		for (int i = offset_x, ni = 0; ni < nw; i++, ni++) // i 用于映射原图像坐标，ni 用于定位旋转后图像坐标
 		{
 			for (int j = offset_y, nj = 0; nj < nh; j++, nj++)
 			{
-				int nx = (int)(i * fNCos - j * fNSin);							// 从旋转后的图像坐标向原图像坐标映射
-				int ny = (int)(i * fNSin + j * fNCos);
-				if (nx >= 0 && nx < w && ny >= 0 && ny < h)						// 若目标映射在原图像范围内，则拷贝色值
-					pNewBuf[nj * nw + ni] = pBuf[ny * w + nx];
+				float nx = i * fNCos - j * fNSin; // 从旋转后的图像坐标向原图像坐标映射
+				float ny = i * fNSin + j * fNCos;
+
+				// 平移图像的原点回到原来的位置
+				nx += centerX;
+				ny += centerY;
+
+				// 双线性插值
+				int x1 = (int)floor(nx);
+				int y1 = (int)floor(ny);
+				int x2 = x1 + 1;
+				int y2 = y1 + 1;
+				float dx = nx - x1;
+				float dy = ny - y1;
+
+				if (x1 >= 0 && x2 < w && y1 >= 0 && y2 < h) {
+					DWORD color1 = pBuf[y1 * w + x1];
+					DWORD color2 = pBuf[y1 * w + x2];
+					DWORD color3 = pBuf[y2 * w + x1];
+					DWORD color4 = pBuf[y2 * w + x2];
+
+					DWORD color = BilinearInterpolation(color1, color2, color3, color4, dx, dy);
+					pNewBuf[nj * nw + ni] = color;
+				}
 			}
 		}
 
 		return img;
 	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	// IMAGE RotateImage_Alpha(IMAGE* pImg, double radian, COLORREF bkcolor)
+	// {
+	// 	radian = -radian;														// 由于 y 轴翻转，旋转角度需要变负
+	// 	float fSin = (float)sin(radian), fCos = (float)cos(radian);				// 存储三角函数值
+	// 	float fNSin = (float)sin(-radian), fNCos = (float)cos(-radian);
+	// 	int left = 0, top = 0, right = 0, bottom = 0;							// 旋转后图像顶点
+	// 	int w, h;
+	// 	GetImageSize(pImg, &w, &h);
+	// 	DWORD* pBuf = GetImageBuffer(pImg);
+	// 	POINT points[4] = { { 0, 0 },{ w, 0 },{ 0, h },{ w, h } };				// 存储图像顶点
+	// 	for (int j = 0; j < 4; j++)												// 旋转图像顶点，搜索旋转后的图像边界
+	// 	{
+	// 		points[j] = {
+	// 			(int)(points[j].x * fCos - points[j].y * fSin),
+	// 			(int)(points[j].x * fSin + points[j].y * fCos)
+	// 		};
+	// 		if (points[j].x < points[left].x)	left = j;
+	// 		if (points[j].y > points[top].y)	top = j;
+	// 		if (points[j].x > points[right].x)	right = j;
+	// 		if (points[j].y < points[bottom].y)	bottom = j;
+	// 	}
+
+	// 	int nw = points[right].x - points[left].x;								// 旋转后的图像尺寸
+	// 	int nh = points[top].y - points[bottom].y;
+	// 	int nSize = nw * nh;
+	// 	int offset_x = points[left].x < 0 ? points[left].x : 0;					// 旋转后图像超出第一象限的位移（据此调整图像位置）
+	// 	int offset_y = points[bottom].y < 0 ? points[bottom].y : 0;
+
+	// 	IMAGE img(nw, nh);
+	// 	DWORD* pNewBuf = GetImageBuffer(&img);
+	// 	if (bkcolor != BLACK)													// 设置图像背景色
+	// 		for (int i = 0; i < nSize; i++)
+	// 			pNewBuf[i] = BGR(bkcolor);
+
+	// 	for (int i = offset_x, ni = 0; ni < nw; i++, ni++)						// i 用于映射原图像坐标，ni 用于定位旋转后图像坐标
+	// 	{
+	// 		for (int j = offset_y, nj = 0; nj < nh; j++, nj++)
+	// 		{
+	// 			int nx = (int)(i * fNCos - j * fNSin);							// 从旋转后的图像坐标向原图像坐标映射
+	// 			int ny = (int)(i * fNSin + j * fNCos);
+	// 			if (nx >= 0 && nx < w && ny >= 0 && ny < h)						// 若目标映射在原图像范围内，则拷贝色值
+	// 				pNewBuf[nj * nw + ni] = pBuf[ny * w + nx];
+	// 		}
+	// 	}
+
+	// 	return img;
+	// }
 
 	IMAGE ZoomImage_Rough_Alpha(IMAGE* srcimg, int width, int height)
 	{
