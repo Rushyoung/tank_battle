@@ -63,7 +63,7 @@ void render(){
     body_layer.push_back(&local_draw->body_block);
     turret_layer.push_back(&local_draw->turret_block);
     //render begin
-    int i = 0;
+    double i = 0;
     while(true){
         local = chan<Tank_info>("local").receive();
 //        cout<<local.pos.y << std::endl;
@@ -77,7 +77,7 @@ void render(){
 //                      map_convert_screen(local.pos, local.pos).y,
 //                      local_draw->offset, 0);
 
-            draw_tank(local_draw, 0, i++, map_convert_screen(local.pos, local.pos).x,
+            draw_tank(local_draw, -i++ * PI / 4, i++ * PI / 4, map_convert_screen(local.pos, local.pos).x,
                       map_convert_screen(local.pos, local.pos).y,
                       local_draw->offset, 0);
 
