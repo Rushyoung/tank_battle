@@ -1,8 +1,8 @@
 //
 // Created by 小小喵姬 on 24-5-13.
 //
-#define MAP_X 5400
-#define MAP_Y 5000
+#define MAP_X 2700
+#define MAP_Y 2500
 
 #define SCREEN_WIDTH 1080
 #define SCREEN_LENGTH 1920
@@ -71,7 +71,7 @@ public:
      * @length:圆形碰撞箱半径
      * @body_image:tank的模型图片
      * */
-    baseTank(int x, int y, int length, int id, double speed, Ai_Type t, tank_type mo):pos(x, y), col(x, y, length), id(id), speed(speed), type(t), model(mo) { head_degree = 90; enable = true; turret_degree = 90;}
+    baseTank(int x, int y, int length, int id, double speed, Ai_Type t, tank_type mo):pos(x, y), col(x, y, length), id(id), speed(speed), type(t), model(mo) { head_degree = PI/2; enable = true; turret_degree = PI;}
     virtual void control() = 0;
     void update_draw(tank_draw_data* d){
         draw = d;

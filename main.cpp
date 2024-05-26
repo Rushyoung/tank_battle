@@ -75,7 +75,7 @@ Tank_collection* create_tank(tank_type t, int id, Ai_Type ai){
     }
     switch (ai) {
         case Local:
-            tank_class = new Tank_local(random(0, MAP_X), random(0, MAP_Y), data->body_width/2,id, 0.1, t);
+            tank_class = new Tank_local(random(0, MAP_X), random(0, MAP_Y), data->body_width/2,id, 2, t);
             return new Tank_collection(data, tank_class);
     }
 }
@@ -88,7 +88,7 @@ int main() {
     // 初始化图形窗口
 
     std::vector<Tank_collection*> tanks;
-    tanks.push_back(create_tank(is2, 1, Local));
+    tanks.push_back(create_tank(sherman, 1, Local));
 
     std::thread r(&render);
     r.join();

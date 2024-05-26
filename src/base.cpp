@@ -75,7 +75,7 @@ void Tank_local::control() {
         _mouse = GetMouseMsg();
         switch(_mouse.uMsg){
             case WM_MOUSEMOVE:
-                std::cerr << "mouse" << _mouse.x << std::endl;
+//                std::cerr << "mouse" << _mouse.x << std::endl;
                 turret_degree = atan2(_mouse.y - pos.y, _mouse.x - pos.x);
                 changed = true;
                 //wait for adjust
@@ -85,52 +85,56 @@ void Tank_local::control() {
                 //wait for fire & adjust
         }
         //move forward
-        if(GetAsyncKeyState(VK_UP)&0x80000){
-            std::cerr << "up" << std::endl;
-            if (pos.x + speed * cos(Radians(head_degree)) >= MAP_X ||
-                pos.x + speed * cos(Radians(head_degree)) <= 0 ||
-                pos.y + speed * sin(Radians(head_degree)) >= MAP_Y ||
-                pos.y + speed * sin(Radians(head_degree)) <= 0) {
-                return;
-            } else {
-                pos.x += speed * cos(Radians(head_degree));
-                pos.y += speed * sin(Radians(head_degree));
+        if(GetAsyncKeyState(VK_UP)&0x8000){
+//            std::cerr << "up" << std::endl;
+            if (!(pos.x + speed * cos(head_degree) >= MAP_X ||
+                pos.x + speed * cos(head_degree) <= 0 ||
+                pos.y + speed * sin(head_degree) >= MAP_Y ||
+                pos.y + speed * sin(head_degree) <= 0)){
+                pos.x += speed * cos(head_degree);
+                pos.y += speed * sin(head_degree);
+//                cout << "+" << pos.x << std::endl;
                 changed = true;
             }
         }
         //move backward
         if(GetAsyncKeyState(VK_DOWN)&0x8000){
-            if (pos.x - speed * cos(Radians(head_degree)) >= MAP_X ||
-                pos.x - speed * cos(Radians(head_degree)) <= 0 ||
-                pos.y - speed * sin(Radians(head_degree)) >= MAP_Y ||
-                pos.y - speed * sin(Radians(head_degree)) <= 0) {
-                return;
-            } else {
-                pos.x -= speed * cos(Radians(head_degree));
-                pos.y -= speed * sin(Radians(head_degree));
+//            std::cerr << "down" << std::endl;
+            if (!(pos.x - speed * cos(head_degree) >= MAP_X ||
+                pos.x - speed * cos(head_degree) <= 0 ||
+                pos.y - speed * sin(head_degree) >= MAP_Y ||
+                pos.y - speed * sin(head_degree) <= 0)){
+
+                pos.x -= speed * cos(head_degree);
+                pos.y -= speed * sin(head_degree);
                 changed = true;
+//                cout << "-" << pos.x << std::endl;
             }
         }
-        //rotate+
+        //rotate-
         if(GetAsyncKeyState(VK_RIGHT)&0x8000){
-            head_degree += ROTATE_SPEED;
-            while (head_degree >= 360) {
-                head_degree -= 360;
+//            std::cerr << "turn-" << std::endl;
+            head_degree -= ROTATE_SPEED;
+            while (head_degree < 0) {
+                head_degree += 2*PI;
             }
             changed = true;
         }
-        //rotate-
+        //rotate+
         if(GetAsyncKeyState(VK_LEFT)&0x8000){
-            head_degree -= ROTATE_SPEED;
-            while (head_degree < 0) {
-                head_degree += 360;
+//            std::cerr << "turn+" << std::endl;
+            head_degree += ROTATE_SPEED;
+            while (head_degree > 2*PI) {
+                head_degree -= 2*PI;
             }
+//            cout<< "degreeeeeeeee"<< head_degree<<std::endl;
             changed = true;
         }
         //send
-        if(changed){
+
             chan<Tank_info>("local").send(Tank_info(pos, head_degree, turret_degree, true));
-        }
+
+//        cout << "x" << pos.x << "y" << pos.y << "degree" << head_degree << std::endl;
         //sleep
         std::this_thread::sleep_for(millisecond(FRAME_TIME));
     }

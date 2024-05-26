@@ -51,6 +51,9 @@ public:
 
     void send(const T& message) {
         std::lock_guard<std::mutex> lock(msg->lock);
+        while (msg->messages.size() >= 5) {
+            msg->messages.pop();
+        }
         msg->messages.push(message);
         msg->cond.notify_one();
     }

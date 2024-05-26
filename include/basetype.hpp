@@ -22,7 +22,7 @@
 //#define PI 3.14159265359
 #define millisecond(x) std::chrono::milliseconds(x)
 #define FLASH_TIME 33
-#define FRAME_TIME 10
+#define FRAME_TIME 12
 #define BULLET_LENGTH 10
 int random(int min, int max);
 extern MOUSEMSG _mouse;
@@ -71,7 +71,7 @@ struct tank_draw_data{
 };
 
 struct Tank_info{
-    Tank_info(Tank_info const &info): pos(info.pos) {}
+    Tank_info(Tank_info const &info): pos(info.pos), head_degree(info.head_degree), turret_degree(info.turret_degree), enable(info.enable){}
     std::mutex mtx;  // 用于保护这个结构体的互斥锁
     struct position pos;
     double head_degree;
@@ -81,7 +81,7 @@ struct Tank_info{
     Tank_info(): pos(-1, -1){enable = false;}
     Tank_info(struct position pos, double head_degree, double turret_degree, bool enable): pos(pos), head_degree(head_degree), turret_degree(turret_degree), enable(enable){}
     Tank_info& operator=(const Tank_info& other){
-        if(other.pos.x < 0 || other.pos.y < 0){
+        if(other.pos.x == -1 || other.pos.y == -1){
             return *this;
         }
         else{
