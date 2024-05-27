@@ -91,8 +91,10 @@ void Tank_local::control() {
                 pos.x + speed * cos(head_degree) <= 0 ||
                 pos.y + speed * sin(head_degree) >= MAP_Y ||
                 pos.y + speed * sin(head_degree) <= 0)){
+
                 pos.x += speed * cos(head_degree);
                 pos.y += speed * sin(head_degree);
+                cout<<head_degree<<std::endl;
 //                cout << "+" << pos.x << std::endl;
                 changed = true;
             }
@@ -107,6 +109,7 @@ void Tank_local::control() {
 
                 pos.x -= speed * cos(head_degree);
                 pos.y -= speed * sin(head_degree);
+                cout<<head_degree<<std::endl;
                 changed = true;
 //                cout << "-" << pos.x << std::endl;
             }
@@ -118,6 +121,7 @@ void Tank_local::control() {
             while (head_degree < 0) {
                 head_degree += 2*PI;
             }
+            cout<<head_degree<<std::endl;
             changed = true;
         }
         //rotate+
@@ -127,6 +131,7 @@ void Tank_local::control() {
             while (head_degree > 2*PI) {
                 head_degree -= 2*PI;
             }
+            cout<<head_degree<<std::endl;
 //            cout<< "degreeeeeeeee"<< head_degree<<std::endl;
             changed = true;
         }

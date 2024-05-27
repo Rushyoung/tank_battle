@@ -71,7 +71,7 @@ public:
      * @length:圆形碰撞箱半径
      * @body_image:tank的模型图片
      * */
-    baseTank(int x, int y, int length, int id, double speed, Ai_Type t, tank_type mo):pos(x, y), col(x, y, length), id(id), speed(speed), type(t), model(mo) { head_degree = PI/2; enable = true; turret_degree = PI;}
+    baseTank(int x, int y, int length, int id, double speed, Ai_Type t, tank_type mo):pos(x, y), col(x, y, length), id(id), speed(speed), type(t), model(mo) { head_degree = 0; enable = true; turret_degree = 0;}
     virtual void control() = 0;
     void update_draw(tank_draw_data* d){
         draw = d;
@@ -82,6 +82,8 @@ public:
     struct position getPos(){return pos;}
     double getDegree(){return head_degree;}
     double getTurrent_degree(){return turret_degree;}
+    Ai_Type getType(){return type;}
+    void fire();
     void broken();
 protected:
     tank_draw_data* draw;
@@ -122,14 +124,17 @@ public:
                             col(tank->getX() + tank->getLength() * cos(Radians(tank->getTurrent_degree())),
         tank->getY() + tank->getLength() * sin(Radians(tank->getTurrent_degree())),
         BULLET_LENGTH,
-        tank->getTurrent_degree()){fire_timestamp = unix_time_stamp();}
+        tank->getTurrent_degree()), type(tank->getType()){fire_timestamp = unix_time_stamp();}
     position get_Bullet_pos();
+    Collision *co(){return collision;}
 
 private:
     struct position origin_pos;
     double degree;
     Collision col;
     long long fire_timestamp;
+    enum  Ai_Type type;
+    Collision* collision;
 };
 
 
