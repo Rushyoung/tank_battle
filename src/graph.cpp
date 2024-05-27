@@ -17,9 +17,9 @@ void rotate_draw(draw_buffer *buffer, double angle, int x, int y) {
 //    setorigin(centerX, centerY);
     buffer->block->SetPos(x - imgCenterX, y - imgCenterY);
 
-    cout << "center" << x - imgCenterX << std::endl;
+//    cout << "center" << x - imgCenterX << std::endl;
     // 旋转图像和掩码
-    cout << "rotate" << angle - buffer->degree_now << std::endl;
+//    cout << "rotate" << angle - buffer->degree_now << std::endl;
     buffer->dst->RotateImage_Alpha(angle - buffer->degree_now);
     buffer->degree_now = angle;
 
@@ -73,13 +73,13 @@ void render(){
 
         if (wnd.BeginTask()) {
 
-//            draw_tank(local_draw, local.head_degree, local.turret_degree, map_convert_screen(local.pos, local.pos).x,
-//                      map_convert_screen(local.pos, local.pos).y,
-//                      local_draw->offset, 0);
-
-            draw_tank(local_draw, -i++ * PI / 4, i++ * PI / 4, map_convert_screen(local.pos, local.pos).x,
+            draw_tank(local_draw, local.head_degree, local.turret_degree, map_convert_screen(local.pos, local.pos).x,
                       map_convert_screen(local.pos, local.pos).y,
                       local_draw->offset, 0);
+
+//            draw_tank(local_draw, -i++ * PI / 4, i++ * PI / 4, map_convert_screen(local.pos, local.pos).x,
+//                      map_convert_screen(local.pos, local.pos).y,
+//                      local_draw->offset, 0);
 
 
 //            map_block.SetPos(-2000,-2000);
@@ -95,7 +95,7 @@ void render(){
         }
 //        hiex::DelayFPS(60);
 //        std::this_thread::sleep_for(millisecond(FLASH_TIME));
-        std::this_thread::sleep_for(millisecond(1000));
+        std::this_thread::sleep_for(millisecond(33));
     }
 
 

@@ -5,7 +5,7 @@
 #include "../include/grap.hpp"
 #include <iostream>
 
-#define ROTATE_SPEED 0.1
+#define ROTATE_SPEED PI/4
 #define FOR_STRAIGHT_CRITICAL_VALUE 6.0
 #define FOR_TURN_CRITICAL_VALUE 8.0
 #define FIRST_DECISION 5
@@ -72,20 +72,20 @@ void Tank_local::control() {
         if(!enable){return;}//destruct & broken
         bool changed;
         changed = false;
-        _mouse = GetMouseMsg();
-        switch(_mouse.uMsg){
-            case WM_MOUSEMOVE:
-//                std::cerr << "mouse" << _mouse.x << std::endl;
-                turret_degree = atan2(_mouse.y - pos.y, _mouse.x - pos.x);
-                changed = true;
-                //wait for adjust
-            case WM_LBUTTONDOWN:
-                turret_degree = atan2(_mouse.y - pos.y, _mouse.x - pos.x);
-                changed = true;
-                //wait for fire & adjust
-        }
+//        _mouse = GetMouseMsg();
+//        switch(_mouse.uMsg){
+//            case WM_MOUSEMOVE:
+////                std::cerr << "mouse" << _mouse.x << std::endl;
+//                turret_degree = atan2(_mouse.y - pos.y, _mouse.x - pos.x);
+//                changed = true;
+//                //wait for adjust
+//            case WM_LBUTTONDOWN:
+//                turret_degree = atan2(_mouse.y - pos.y, _mouse.x - pos.x);
+//                changed = true;
+//                //wait for fire & adjust
+//        }
         //move forward
-        if(GetAsyncKeyState(VK_UP)&0x8000){
+        if(GetAsyncKeyState('W')&0x8000){
 //            std::cerr << "up" << std::endl;
             if (!(pos.x + speed * cos(head_degree) >= MAP_X ||
                 pos.x + speed * cos(head_degree) <= 0 ||
@@ -98,7 +98,7 @@ void Tank_local::control() {
             }
         }
         //move backward
-        if(GetAsyncKeyState(VK_DOWN)&0x8000){
+        if(GetAsyncKeyState('S')&0x8000){
 //            std::cerr << "down" << std::endl;
             if (!(pos.x - speed * cos(head_degree) >= MAP_X ||
                 pos.x - speed * cos(head_degree) <= 0 ||
@@ -112,7 +112,7 @@ void Tank_local::control() {
             }
         }
         //rotate-
-        if(GetAsyncKeyState(VK_RIGHT)&0x8000){
+        if(GetAsyncKeyState('A')&0x8000){
 //            std::cerr << "turn-" << std::endl;
             head_degree -= ROTATE_SPEED;
             while (head_degree < 0) {
@@ -121,13 +121,29 @@ void Tank_local::control() {
             changed = true;
         }
         //rotate+
-        if(GetAsyncKeyState(VK_LEFT)&0x8000){
+        if(GetAsyncKeyState('D')&0x8000){
 //            std::cerr << "turn+" << std::endl;
             head_degree += ROTATE_SPEED;
             while (head_degree > 2*PI) {
                 head_degree -= 2*PI;
             }
 //            cout<< "degreeeeeeeee"<< head_degree<<std::endl;
+            changed = true;
+        }
+        if(GetAsyncKeyState(VK_RIGHT)&0x8000){
+//            std::cerr << "turn-" << std::endl;
+            turret_degree -= ROTATE_SPEED;
+            while (turret_degree < 0) {
+                turret_degree += 2*PI;
+            }
+            changed = true;
+        }
+        if(GetAsyncKeyState(VK_LEFT)&0x8000){
+//            std::cerr << "turn-" << std::endl;
+            turret_degree += ROTATE_SPEED;
+            while (turret_degree < 0) {
+                turret_degree += 2*PI;
+            }
             changed = true;
         }
         //send
