@@ -10,6 +10,8 @@
 #define FOR_TURN_CRITICAL_VALUE 8.0
 #define FIRST_DECISION 5
 
+std::vector<Bullet> bullets;
+
 int whether_first=0;//0为第一次，1为后续
 
 int for_condition=0;//0为前进，1为转弯
@@ -84,16 +86,19 @@ void Tank_local::control() {
 //                changed = true;
 //                //wait for fire & adjust
 //        }
+
+        double radian_head= Radians(head_degree);
+        double radian_turret= Radians(turret_degree);
         //move forward
         if(GetAsyncKeyState('W')&0x8000){
 //            std::cerr << "up" << std::endl;
-            if (!(pos.x + speed * cos(head_degree) >= MAP_X ||
-                pos.x + speed * cos(head_degree) <= 0 ||
-                pos.y + speed * sin(head_degree) >= MAP_Y ||
-                pos.y + speed * sin(head_degree) <= 0)){
+            if (!(pos.x + speed * cos(radian_head) >= MAP_X ||
+                pos.x + speed * cos(radian_head) <= 0 ||
+                pos.y + speed * sin(radian_head) >= MAP_Y ||
+                pos.y + speed * sin(radian_head) <= 0)){
 
-                pos.x += speed * cos(head_degree);
-                pos.y += speed * sin(head_degree);
+                pos.x += speed * cos(radian_head);
+                pos.y += speed * sin(radian_head);
                 cout<<head_degree<<std::endl;
 //                cout << "+" << pos.x << std::endl;
                 changed = true;
@@ -102,13 +107,13 @@ void Tank_local::control() {
         //move backward
         if(GetAsyncKeyState('S')&0x8000){
 //            std::cerr << "down" << std::endl;
-            if (!(pos.x - speed * cos(head_degree) >= MAP_X ||
-                pos.x - speed * cos(head_degree) <= 0 ||
-                pos.y - speed * sin(head_degree) >= MAP_Y ||
-                pos.y - speed * sin(head_degree) <= 0)){
+            if (!(pos.x - speed * cos(radian_head) >= MAP_X ||
+                pos.x - speed * cos(radian_head) <= 0 ||
+                pos.y - speed * sin(radian_head) >= MAP_Y ||
+                pos.y - speed * sin(radian_head) <= 0)){
 
-                pos.x -= speed * cos(head_degree);
-                pos.y -= speed * sin(head_degree);
+                pos.x -= speed * cos(radian_head);
+                pos.y -= speed * sin(radian_head);
                 cout<<head_degree<<std::endl;
                 changed = true;
 //                cout << "-" << pos.x << std::endl;
@@ -117,9 +122,9 @@ void Tank_local::control() {
         //rotate-
         if(GetAsyncKeyState('A')&0x8000){
 //            std::cerr << "turn-" << std::endl;
-            head_degree -= ROTATE_SPEED;
+            head_degree -= Degree(ROTATE_SPEED);
             while (head_degree < 0) {
-                head_degree += 2*PI;
+                head_degree += 360;
             }
             cout<<head_degree<<std::endl;
             changed = true;
@@ -127,9 +132,9 @@ void Tank_local::control() {
         //rotate+
         if(GetAsyncKeyState('D')&0x8000){
 //            std::cerr << "turn+" << std::endl;
-            head_degree += ROTATE_SPEED;
-            while (head_degree > 2*PI) {
-                head_degree -= 2*PI;
+            head_degree += Degree(ROTATE_SPEED);
+            while (head_degree > 360) {
+                head_degree -= 360;
             }
             cout<<head_degree<<std::endl;
 //            cout<< "degreeeeeeeee"<< head_degree<<std::endl;
@@ -137,32 +142,48 @@ void Tank_local::control() {
         }
         if(GetAsyncKeyState(VK_RIGHT)&0x8000){
 //            std::cerr << "turn-" << std::endl;
-            turret_degree -= ROTATE_SPEED;
+            turret_degree -= Degree(ROTATE_SPEED);
             while (turret_degree < 0) {
-                turret_degree += 2*PI;
+                turret_degree += 360;
             }
             changed = true;
         }
         if(GetAsyncKeyState(VK_LEFT)&0x8000){
 //            std::cerr << "turn-" << std::endl;
-            turret_degree += ROTATE_SPEED;
+            turret_degree += Degree(ROTATE_SPEED);
             while (turret_degree < 0) {
-                turret_degree += 2*PI;
+                turret_degree += 360;
             }
             changed = true;
         }
         //send
 
-            chan<Tank_info>("local").send(Tank_info(pos, head_degree, turret_degree, true));
+            chan<Tank_info>("local").send(Tank_info(pos, head_degree, turret_degree, true));//不知道用不用改
 
 //        cout << "x" << pos.x << "y" << pos.y << "degree" << head_degree << std::endl;
         //sleep
         std::this_thread::sleep_for(millisecond(FRAME_TIME));
+
+
+
+        for (auto& bullet : bullets) { // 遍历并更新所有子弹
+            if(bullet.co()->is_coincide(this->col)){
+                this->broken();
+            }
+        }
     }
 }
 
 void baseTank::broken() {
+    enable=false;
+}
 
+void baseTank::fire() {
+    while(true){
+        if(GetAsyncKeyState(VK_SPACE)&0x8000){
+            bullets.emplace_back(this);
+        }
+    }
 }
 
 position Bullet::get_Bullet_pos() {
@@ -223,5 +244,11 @@ void Tank_ai::control() {
         }
         //sleep
         std::this_thread::sleep_for(millisecond(FRAME_TIME));
+
+        for (auto& bullet : bullets) { // 遍历并更新所有子弹
+            if(bullet.co()->is_coincide(this->col)){
+                this->broken();
+            }
+        }
     }
 }
