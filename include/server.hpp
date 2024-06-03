@@ -8,16 +8,6 @@
 namespace server{
     static const std::string __SERVER__ = "Server: asio/1.0\r\n";
     using header = std::map<std::string, std::string>;
-    class listener{
-    private:
-        asio::io_context io_context;
-        asio::ip::tcp::acceptor acceptor;
-        response (*callback)(std::string);
-        int port;
-    public:
-        listener(int, response(*)(std::string));
-        void start_accept();
-    };
     
     class response{
     private:
@@ -26,9 +16,30 @@ namespace server{
         std::string message;
     public:
         response(int);
-        void set_message(std::string);
+        void add_message(std::string);
         void add_header(std::string, std::string);
         std::string operator()();
+    };
+
+    struct receipt{
+        std::string method;
+        std::string path;
+        std::string version;
+        header headers;
+        std::string body;
+    };
+
+    class listener{
+    private:
+        asio::io_context io_context;
+        asio::ip::tcp::acceptor acceptor;
+        response (*callback)(receipt);
+        int port;
+        void do_accept();
+    public:
+        listener(int, response(*)(receipt));
+        ~listener();
+        void start_accept();
     };
 };
 
