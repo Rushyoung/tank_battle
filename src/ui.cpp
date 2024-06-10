@@ -62,23 +62,41 @@ position::position(int x, int y){
     this->y = y;
 }
 
-UI::UI(int width, int height){
+position position::operator+(position pos){
+    return position(x+pos.x, y+pos.y);
+}
+
+position position::operator-(position pos){
+    return position(x-pos.x, y-pos.y);
+}
+
+
+UI_render::UI_render(int width, int height){
     this->width = width;
     this->height = height;
     initgraph(width, height);
 }
 
-void UI::update(){
-    FlushBatchDraw();
+
+void UI_render::set_background(RGB_color color){
+    setbkcolor(color.get_color());
+    cleardevice();
 }
 
-void UI::draw_text(RGB_color color, std::string text, position pos, int size){
+
+void UI_render::update(){
+    FlushBatchDraw();
+    BeginBatchDraw();
+    cleardevice();
+}
+
+void UI_render::draw_text(RGB_color color, std::string text, position pos, int size){
     settextcolor(color.get_color());
     settextstyle(size, 0, "宋体");
     outtextxy(pos.x, pos.y, text.c_str());
 }
 
-void UI::draw_rect(RGB_color color, position start, position end, bool fill){
+void UI_render::draw_rect(RGB_color color, position start, position end, bool fill){
     setlinecolor(color.get_color());
     if(fill){
         setfillcolor(color.get_color());
@@ -88,7 +106,7 @@ void UI::draw_rect(RGB_color color, position start, position end, bool fill){
     }
 }
 
-void UI::draw_circle(RGB_color color, position center, int radius, int thickness, bool fill = true){
+void UI_render::draw_circle(RGB_color color, position center, int radius, int thickness, bool fill = true){
     setlinecolor(color.get_color());
     if(fill){
         setfillcolor(color.get_color());
@@ -98,13 +116,13 @@ void UI::draw_circle(RGB_color color, position center, int radius, int thickness
     }
 }
 
-void UI::draw_line(RGB_color color, position start, position end, int thickness){
+void UI_render::draw_line(RGB_color color, position start, position end, int thickness){
     setlinecolor(color.get_color());
     setlinestyle(PS_SOLID, thickness);
     line(start.x, start.y, end.x, end.y);
 }
 
-void UI::draw_image(IMAGE img, position start, double angle = 0.0){
+void UI_render::draw_image(IMAGE img, position start, double angle = 0.0){
     IMAGE output = img;
     if(angle != 0.0){
         rotateimage(&output, &img, angle);
@@ -112,8 +130,24 @@ void UI::draw_image(IMAGE img, position start, double angle = 0.0){
     putimage(start.x, start.y, &output);
 }
 
-void UI::draw_image(std::string_view path, position start, position size){
+void UI_render::draw_image(std::string_view path, position start, position size){
     IMAGE img;
     loadimage(&img, std::string(path).c_str(), size.x, size.y);
     putimage(start.x, start.y, &img);
+}
+
+FPS_controller::FPS_controller(int fps){
+    this->fps = fps;
+    frame_time = 1000 / fps;
+    last_time = time(nullptr);
+    frame_count = 0;
+}
+
+void FPS_controller::wait(){
+    frame_count++;
+    time_t current_time = time(nullptr);
+    if(current_time - last_time < frame_time){
+        Sleep(frame_time - current_time + last_time);
+    }
+    last_time = time(nullptr);
 }
