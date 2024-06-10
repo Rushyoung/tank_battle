@@ -24,10 +24,11 @@ private:
     static channel_map msg_set;
     std::shared_ptr<chan_message> msg;
 public:
-    chan(std::string);
+    chan(const std::string&);
     void send(const std::string&);
     std::string receive();
     std::string receive_safe();
 };
+channel_map chan::msg_set = {};
 
 #endif

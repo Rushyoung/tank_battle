@@ -1,5 +1,5 @@
 #ifndef DEBUG
-#include "include/ui.hpp"
+#include "ui.hpp"
 #endif
 
 #include <easyx.h>
@@ -72,7 +72,7 @@ void UI::update(){
     FlushBatchDraw();
 }
 
-void UI::draw_text(std::string text, RGB_color color, position pos, int size){
+void UI::draw_text(RGB_color color, std::string text, position pos, int size){
     settextcolor(color.get_color());
     settextstyle(size, 0, "宋体");
     outtextxy(pos.x, pos.y, text.c_str());
@@ -104,7 +104,7 @@ void UI::draw_line(RGB_color color, position start, position end, int thickness)
     line(start.x, start.y, end.x, end.y);
 }
 
-void UI::draw_image(IMAGE img, position start, position end, double angle = 0.0){
+void UI::draw_image(IMAGE img, position start, double angle = 0.0){
     IMAGE output = img;
     if(angle != 0.0){
         rotateimage(&output, &img, angle);
@@ -112,3 +112,8 @@ void UI::draw_image(IMAGE img, position start, position end, double angle = 0.0)
     putimage(start.x, start.y, &output);
 }
 
+void UI::draw_image(std::string_view path, position start, position size){
+    IMAGE img;
+    loadimage(&img, std::string(path).c_str(), size.x, size.y);
+    putimage(start.x, start.y, &img);
+}

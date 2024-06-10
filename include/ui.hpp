@@ -29,11 +29,12 @@ private:
 public:
     UI(int, int);
     void update();
-    void draw_text(std::string, RGB_color, position, int);
+    void draw_text(RGB_color, std::string, position, int);
     void draw_rect(RGB_color, position, position, bool);
     void draw_circle(RGB_color, position, int, int, bool);
     void draw_line(RGB_color, position, position, int);
-    void draw_image(IMAGE, position, position, double);
+    void draw_image(IMAGE, position, double);
+    void draw_image(std::string_view, position, position);
 };
 
 #endif
