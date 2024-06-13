@@ -25,6 +25,32 @@ struct position{
     position operator-(position);
 };
 
+class picture{
+private:
+    IMAGE img;
+    IMAGE *img_ptr;
+    int width, height;
+    double radius;
+    std::string path;
+    bool is_rotated;
+    bool is_loaded;
+public:
+    picture(std::string_view);
+    const IMAGE* get_image();
+    void resize(int, int);
+    void rotate(double);
+    void draw(position);
+    void draw(int, int);
+};
+
+class picture_alpha: public picture{
+private:
+    IMAGE img_alpha;
+public:
+    picture_alpha(std::string_view, std::string_view);
+    void draw(position);
+};
+
 
 class UI_render {
 private:

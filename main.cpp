@@ -1,32 +1,33 @@
-#include "ui.hpp"
+#include "render.hpp"
 #include <windows.h>
 
 #define key(x) (GetAsyncKeyState(x)&0x8000)
 
 int main(){
-    UI_render ui(800, 600);
-    FPS_controller fps(60);
+    render::window window(600, 480);
+    render::FPS fps(60);
+    render::rect block(render::color(255, 0, 0), render::size(50, 50), true);
+    render::position pos(0, 0);
 
-    RGB_color white("#FFFFFF");
-    RGB_color black(0, 0, 0);
-
-    ui.set_background(white);
-
-    position rect_pos(0, 0);
-    position rect_size(200, 200);
-
-    while(1){
-        ui.update();
-        ui.draw_rect(black, rect_pos, rect_pos+rect_size, true);
+    while(true){
         if(key(VK_UP)){
-            rect_pos.y -= 5;
+            pos.move(0, -5);
         } else if(key(VK_DOWN)){
-            rect_pos.y += 5;
+            pos.move(0, 5);
         } else if(key(VK_LEFT)){
-            rect_pos.x -= 5;
+            pos.move(-5, 0);
         } else if(key(VK_RIGHT)){
-            rect_pos.x += 5;
+            pos.move(5, 0);
+        } else if(key(VK_ESCAPE)){
+            break;
         }
+        block.draw(pos.x, pos.y);
+        window.update();
         fps.wait();
     }
+    
+
+    // closegraph();
+    closegraph();
+    return 0;
 }

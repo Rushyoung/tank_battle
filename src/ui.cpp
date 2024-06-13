@@ -136,11 +136,65 @@ void UI_render::draw_image(std::string_view path, position start, position size)
     putimage(start.x, start.y, &img);
 }
 
+picture::picture(std::string_view path){
+    loadimage(&img, path.data());
+    width  = img.getheight();
+    height = img.getwidth();
+    radius = 0;
+    this->path = std::string(path);
+    is_loaded = true;
+    is_rotated = false;
+    img_ptr = &img;
+}
+
+const IMAGE* picture::get_image(){
+    if(!is_loaded){
+        loadimage(&img, path.c_str(), width, height);
+        is_loaded = true;
+    }
+    if(is_rotated){
+        if(img_ptr != nullptr){
+            delete img_ptr;
+        }
+        img_ptr = new IMAGE;
+        rotateimage(img_ptr, &img, radius);
+    }
+    return img_ptr;
+}
+
+void picture::resize(int width, int height){
+    this->width = width;
+    this->height = height;
+    is_loaded = false;
+}
+
+void picture::rotate(double angle){
+    radius = angle;
+    is_rotated = true;
+}
+
+void picture::draw(int x, int y){
+    putimage(x, y, get_image());
+}
+
+void picture::draw(position pos){
+    putimage(pos.x, pos.y, get_image());
+}
+
+picture_alpha::picture_alpha(std::string_view path, std::string_view alpha_path)
+    : picture(path){
+    loadimage(&img_alpha, alpha_path.data());
+}
+
+void picture_alpha::draw(position pos){
+    putimage(pos.x, pos.y, get_image(), SRCINVERT);
+}
+
+
 FPS_controller::FPS_controller(int fps){
     this->fps = fps;
     frame_time = 1000 / fps;
     last_time = time(nullptr);
-    frame_count = 0;
 }
 
 void FPS_controller::wait(){
