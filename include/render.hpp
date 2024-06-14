@@ -6,6 +6,9 @@
 #include <ctime>
 #include <vector>
 
+#define PI 3.14159265358979323846
+#define degree(x) ((x)*PI/180.0)
+
 namespace render{
     /**
      * @brief RBG颜色类
@@ -60,7 +63,7 @@ namespace render{
     */
     class base_render_object{
     protected:
-        position pos;
+        position default_pos;
     public:
         virtual void draw() = 0;
         virtual void draw(position&) = 0;
@@ -150,21 +153,35 @@ namespace render{
     using stripe = render_line;
 
     /**
+     * @brief 基础图片渲染类
+    */
+    class base_image{
+    private:
+        IMAGE img;
+        IMAGE img_output;
+        std::string path;
+    public:
+        base_image(std::string_view);
+        base_image();
+        void resize(int, int);
+        void rotate(double);
+        void draw(int, int, DWORD=SRCCOPY);
+    };
+
+    /**
      * @brief 图片渲染类，继承自渲染物体基类
     */
     class render_pic: public render_object{
     protected:
-        IMAGE*img_output;
-        IMAGE img;
-        IMAGE img_alpha;
+        base_image img;
+        base_image img_alpha;
+        bool is_alpha;
         double rotation;
-        std::string path;
-        bool is_flashed;
     public:
         render_pic(std::string_view);
         void resize(int, int);
         void rotate(double);
-        void set_as_alpha();
+        void set_as_alpha(std::string_view);
         void draw(int, int) override;
     };
     using picture = render_pic;
@@ -177,18 +194,27 @@ namespace render{
     private:
         int width, height;
         
-        std::vector<render_object*> background_objects;
-        IMAGE background;
-        bool has_background;
-        void draw_background();
+        std::vector<render_object*> default_render_list;
+        std::vector<bool> enable_render_list;
+        bool has_default;
+        void draw_default();
 
         color background_color;
     public:
         window(int, int);
         ~window();
         void set_background(color);
-        void add_background(render_object*);
+    
+        int  add_render_object(render_object*);
+        const render_object* get_render_object(int);
+        void remove_render_object(int);
+        void enable_render_object(int);
+        void clear_render_object();
+
         void update();
+
+        bool is_closed();
+        void retitle(std::string_view);
     };
 }
 

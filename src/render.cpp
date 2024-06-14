@@ -111,7 +111,7 @@ namespace render{
     }
 
     void render_object::draw(){
-        this->draw(pos.x, pos.y);
+        this->draw(default_pos.x, default_pos.y);
     }
 
     void render_object::move(position &pos){
@@ -119,7 +119,7 @@ namespace render{
     }
 
     void render_object::move(int x, int y){
-        pos.move(x, y);
+        default_pos.move(x, y);
     }
 
 
@@ -218,33 +218,58 @@ namespace render{
         line(x, y, end_x, end_y);
     }
 
-    render_pic::render_pic(std::string_view path){
+    base_image::base_image(std::string_view path){
         loadimage(&img, path.data());
-        is_flashed = true;
-        img_output = &img;
+        img_output = img;
         this->path = std::string(path);
     }
-    void render_pic::resize(int width, int height){
+    base_image::base_image(){
+        path = "";
+    }
+    void base_image::resize(int width, int height){
         loadimage(&img, path.c_str(), width, height);
         img.Resize(width, height);
     }
+    void base_image::rotate(double angle){
+        rotateimage(&img_output, &img, angle);
+    }
+    void base_image::draw(int x, int y, DWORD mode){
+        putimage(x, y, &img_output, mode);
+    }
+
+    render_pic::render_pic(std::string_view path){
+        img = base_image(path);
+        is_alpha = false;
+        img_alpha = base_image(path);
+    }
+    void render_pic::resize(int width, int height){
+        img.resize(width, height);
+        if(is_alpha){
+            img_alpha.resize(width, height);
+        }
+    }
     void render_pic::rotate(double angle){
         rotation = angle;
-        if(img_output != &img){
-            delete img_output;
+        img.rotate(angle);
+        if(is_alpha){
+            img_alpha.rotate(angle);
         }
-        img_output = new IMAGE;
-        rotateimage(img_output, &img, angle);
     }
     void render_pic::draw(int x, int y){
-        putimage(x, y, img_output);
+        if(is_alpha){
+            img_alpha.draw(x, y, SRCAND);
+            img.draw(x, y, SRCPAINT);
+        } else {
+            img.draw(x, y);
+        }
     }
-    void render_pic::set_as_alpha(){
-        /** @todo */
+    void render_pic::set_as_alpha(std::string_view path){
+        img_alpha = base_image(path);
+        is_alpha = true;
     }
 
     window::window(int width, int height){
-        has_background = false;
+        has_default = false;
         this->width = width;
         this->height = height;
         initgraph(width, height);
@@ -257,8 +282,8 @@ namespace render{
         FlushBatchDraw();
         BeginBatchDraw();
         cleardevice();
-        if(has_background){
-            draw_background();
+        if(has_default){
+            draw_default();
         }
     }
 
@@ -266,17 +291,44 @@ namespace render{
         setbkcolor(bg_color.get_color());
         cleardevice();
     }
-    void window::add_background(render_object* obj){
-        has_background = true;
-        background_objects.push_back(obj);
+    int window::add_render_object(render_object* obj){
+        has_default = true;
+        default_render_list.push_back(obj);
+        enable_render_list .push_back(true);
+        return default_render_list.size() - 1;
     }
-    void window::draw_background(){
-        if(!has_background){
+    const render_object* window::get_render_object(int index){
+        return default_render_list[index];
+    }
+    void window::remove_render_object(int index){
+        enable_render_list[index] = false;
+    }
+    void window::enable_render_object(int index){
+        enable_render_list[index] = true;
+    }
+    void window::draw_default(){
+        if(!has_default){
             return;
         }
-        for(auto obj: background_objects){
-            obj->draw();
+        for(int idx = 0; idx < default_render_list.size(); idx++){
+            if(enable_render_list[idx]){
+                default_render_list[idx]->draw();
+            }
         }
+    }
+    void window::clear_render_object(){
+        default_render_list.clear();
+        enable_render_list.clear();
+    }
+
+    bool window::is_closed(){
+        HWND hwnd = GetHWnd();
+        DWORD style = GetWindowLong(hwnd, GWL_STYLE);
+        return (style & WS_VISIBLE) == 0;
+    }
+    void window::retitle(std::string_view title){
+        HWND hwnd = GetHWnd();
+        SetWindowText(hwnd, title.data());
     }
 }
 
