@@ -58,10 +58,24 @@ namespace render{
     /**
      * @brief 渲染物体的基类
     */
-    class render_object{
+    class base_render_object{
+    protected:
+        position pos;
     public:
-        void draw(position&);
+        virtual void draw() = 0;
+        virtual void draw(position&) = 0;
         virtual void draw(int, int) = 0;
+        virtual void move(position&) = 0;
+        virtual void move(int, int) = 0;
+    };
+
+    class render_object: protected base_render_object{
+    public:
+        virtual void draw(int, int) = 0;
+        void draw() override;
+        void draw(position&) override;
+        void move(position&) override;
+        void move(int, int) override;
     };
 
     /**
@@ -140,12 +154,12 @@ namespace render{
     */
     class render_pic: public render_object{
     protected:
+        IMAGE*img_output;
         IMAGE img;
         IMAGE img_alpha;
         double rotation;
         std::string path;
-        bool is_rotated;
-        bool is_loaded;
+        bool is_flashed;
     public:
         render_pic(std::string_view);
         void resize(int, int);
@@ -167,7 +181,6 @@ namespace render{
         IMAGE background;
         bool has_background;
         void draw_background();
-        void update_background();
 
         color background_color;
     public:

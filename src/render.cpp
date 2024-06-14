@@ -110,6 +110,18 @@ namespace render{
         this->draw(pos.x, pos.y);
     }
 
+    void render_object::draw(){
+        this->draw(pos.x, pos.y);
+    }
+
+    void render_object::move(position &pos){
+        this->move(pos.x, pos.y);
+    }
+
+    void render_object::move(int x, int y){
+        pos.move(x, y);
+    }
+
 
     render_text::render_text(color font_color, std::string_view content, int font_size){
         font = "宋体";
@@ -208,57 +220,63 @@ namespace render{
 
     render_pic::render_pic(std::string_view path){
         loadimage(&img, path.data());
-        is_rotated = false;
+        is_flashed = true;
+        img_output = &img;
         this->path = std::string(path);
     }
     void render_pic::resize(int width, int height){
         loadimage(&img, path.c_str(), width, height);
+        img.Resize(width, height);
     }
     void render_pic::rotate(double angle){
-        is_rotated = true;
         rotation = angle;
+        if(img_output != &img){
+            delete img_output;
+        }
+        img_output = new IMAGE;
+        rotateimage(img_output, &img, angle);
     }
     void render_pic::draw(int x, int y){
-        
+        putimage(x, y, img_output);
     }
     void render_pic::set_as_alpha(){
         /** @todo */
     }
 
-}
-
-render::window::window(int width, int height){
-    has_background = false;
-    this->width = width;
-    this->height = height;
-    initgraph(width, height);
-}
-render::window::~window(){
-    closegraph();
-}
-
-void render::window::update(){
-    FlushBatchDraw();
-    BeginBatchDraw();
-    cleardevice();
-}
-
-void render::window::set_background(color bg_color){
-    setbkcolor(bg_color.get_color());
-    cleardevice();
-}
-void render::window::add_background(render_object* obj){
-    has_background = true;
-    background_objects.push_back(obj);
-}
-void render::window::draw_background(){
-    if(!has_background){
-        return;
+    window::window(int width, int height){
+        has_background = false;
+        this->width = width;
+        this->height = height;
+        initgraph(width, height);
     }
-    for(auto obj: background_objects){
-        obj->draw(0, 0);
+    window::~window(){
+        closegraph();
+    }
 
+    void window::update(){
+        FlushBatchDraw();
+        BeginBatchDraw();
+        cleardevice();
+        if(has_background){
+            draw_background();
+        }
+    }
+
+    void window::set_background(color bg_color){
+        setbkcolor(bg_color.get_color());
+        cleardevice();
+    }
+    void window::add_background(render_object* obj){
+        has_background = true;
+        background_objects.push_back(obj);
+    }
+    void window::draw_background(){
+        if(!has_background){
+            return;
+        }
+        for(auto obj: background_objects){
+            obj->draw();
+        }
+    }
 }
-void render::window::update_background(){
-    /** @todo */
-}
+
