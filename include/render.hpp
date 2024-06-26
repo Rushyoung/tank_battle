@@ -5,6 +5,10 @@
 #include <string>
 #include <ctime>
 #include <vector>
+#include <chrono>
+#include <thread>
+#include <set>
+#include <memory>
 
 #define PI 3.14159265358979323846
 #define degree(x) ((x)*PI/180.0)
@@ -45,16 +49,20 @@ namespace render{
     /**
      * @brief FPS 控制类
     */
+    template<int FPS_count>
     class FPS{
     private:
-        int    fps;
-        time_t last_render_time;
-        double frame_interval;
-        int    frame_count;
+        std::chrono::duration<double, std::ratio<1, FPS_count>> time_between_frames;
+        std::chrono::time_point<std::chrono::steady_clock, decltype(time_between_frames)> wake_time_point;
     public:
-        FPS(int);
-        void set_fps(int);
-        void wait();
+        FPS(){
+            time_between_frames = std::chrono::duration<double, std::ratio<1, FPS_count>>(1);
+            wake_time_point = std::chrono::steady_clock::now();
+        }
+        void wait(){
+            wake_time_point += time_between_frames;
+            std::this_thread::sleep_until(wake_time_point);
+        }
     };
 
 
@@ -186,6 +194,22 @@ namespace render{
     };
     using picture = render_pic;
 
+
+    /**
+     * @brief 消息检测类，继承自智能指针
+    */
+    class monitor: public std::shared_ptr<monitor>{
+    private:
+        bool key_state[256];
+        std::atomic<int> stop_msg_loop;
+    public:
+        monitor();
+        ~monitor();
+        void clear();
+        bool key(int);
+        void message_loop(monitor&);
+    };
+
     
     /**
      * @brief 窗口渲染类
@@ -216,6 +240,20 @@ namespace render{
         bool is_closed();
         void retitle(std::string_view);
     };
+
+
 }
+
+
+
+
+
+#define render_cast(type, value) \
+({ \
+    const_cast<type*>(\
+        static_cast<const type*>(value) \
+    ); \
+})
+
 
 #endif

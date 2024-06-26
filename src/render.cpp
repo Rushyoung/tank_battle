@@ -6,9 +6,15 @@
 
 
 #include <string>
-#include <ctime>
 #include <vector>
+
+#include <chrono>
 #include <cmath>
+
+#include <iostream>
+
+#include <thread>
+#include <atomic>
 
 namespace render{
     /**
@@ -82,27 +88,6 @@ namespace render{
     void base_tuple::move(int x, int y){
         this->x += x;
         this->y += y;
-    }
-
-
-    FPS::FPS(int fps){
-        this->fps = fps;
-        frame_interval = 1.0 / fps;
-        last_render_time = 0;
-    }
-
-    void FPS::set_fps(int fps){
-        this->fps = fps;
-        frame_interval = 1.0 / fps;
-    }
-
-    void FPS::wait(){
-        time_t current_time = time(nullptr);
-        double interval = difftime(current_time, last_render_time);
-        if(interval < frame_interval){
-            Sleep((frame_interval - interval) * 1000);
-        }
-        last_render_time = time(nullptr);
     }
 
 
@@ -231,7 +216,7 @@ namespace render{
         img.Resize(width, height);
     }
     void base_image::rotate(double angle){
-        rotateimage(&img_output, &img, angle);
+        rotateimage(&img_output, &img, degree(angle));
     }
     void base_image::draw(int x, int y, DWORD mode){
         putimage(x, y, &img_output, mode);
@@ -266,6 +251,46 @@ namespace render{
     void render_pic::set_as_alpha(std::string_view path){
         img_alpha = base_image(path);
         is_alpha = true;
+    }
+
+    monitor::monitor():
+    stop_msg_loop(std::atomic<int>(false)){
+        memset(key_state, 0, sizeof(key_state));
+        // in new thread to call message loop
+        std::thread(&monitor::message_loop, this, std::ref(*this)).detach();
+    }
+
+    monitor::~monitor(){
+        std::cout<< "monitor destroyed\n";
+        stop_msg_loop = true;
+    }
+
+    bool monitor::key(int vkey){
+        // get the keyboard message
+        ExMessage msg = {0};
+        while(peekmessage(&msg, EX_KEY, true)){
+            key_state[msg.vkcode] = true;
+        }
+        return key_state[vkey] > 0;
+    }
+
+    void monitor::clear(){
+        for(int i = 0; i < 256; i++){
+            key_state[i] = 0;
+        }
+    }
+
+    void monitor::message_loop(monitor &self){
+        ExMessage msg = {0};
+        loop_start:
+        while(peekmessage(&msg, EX_KEY, true)){
+            key_state[msg.vkcode] = true;
+        }
+        if(stop_msg_loop){
+            return;
+        }
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        goto loop_start;
     }
 
     window::window(int width, int height){
