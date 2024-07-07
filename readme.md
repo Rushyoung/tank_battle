@@ -2,6 +2,8 @@
 
 > <strong><big><green>This is a class work for CPP course of NEU.</green></big></strong>
 > 暂时搁置网络部分，这部分难度超过预期
+> 暂时搁置图像绘制部分，这部分难度超过预期
+> 预计使用HiEasyX作为UI库
 
 
 ## project framework
