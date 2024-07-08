@@ -87,9 +87,9 @@ namespace render{
         position default_pos;
     public:
         virtual void draw() = 0;
-        virtual void draw(position&) = 0;
+        virtual void draw(position) = 0;
         virtual void draw(int, int) = 0;
-        virtual void move(position&) = 0;
+        virtual void move(position) = 0;
         virtual void move(double, double) = 0;
     };
 
@@ -97,8 +97,8 @@ namespace render{
     public:
         virtual void draw(int, int) = 0;
         void draw() override;
-        void draw(position&) override;
-        void move(position&) override;
+        void draw(position) override;
+        void move(position) override;
         void move(double, double) override;
     };
 
@@ -112,6 +112,7 @@ namespace render{
         int size;
         color text_color;
     public:
+        using render_object::draw;
         render_text(color, std::string_view, int);
         void set_font(std::string_view);
         void set_text(std::string_view);
@@ -130,6 +131,7 @@ namespace render{
         size rect_size;
         bool is_filled;
     public:
+        using render_object::draw;
         render_rect(color, size, bool);
         void set_color(color);
         void set_size(size);
@@ -147,6 +149,7 @@ namespace render{
         double radius;
         bool is_filled;
     public:
+        using render_object::draw;
         render_circle(color, double, bool);
         void set_color(color);
         void set_radius(double);
@@ -165,6 +168,7 @@ namespace render{
         double angle;
         int thick;
     public:
+        using render_object::draw;
         render_line(color, int, double=0, int=1);
         void set_color(color);
         void set_length(int);
@@ -205,6 +209,7 @@ namespace render{
         color ingore_color;
         double rotation;
     public:
+        using render_object::draw;
         render_pic(std::string_view);
         void resize(int, int);
         void rotate(double);

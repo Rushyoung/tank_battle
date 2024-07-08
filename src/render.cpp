@@ -91,7 +91,7 @@ namespace render{
     }
 
 
-    void render_object::draw(position &pos){
+    void render_object::draw(position pos){
         this->draw(pos.x, pos.y);
     }
 
@@ -99,7 +99,7 @@ namespace render{
         this->draw(default_pos.x, default_pos.y);
     }
 
-    void render_object::move(position &pos){
+    void render_object::move(position pos){
         this->move(pos.x, pos.y);
     }
 

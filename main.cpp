@@ -19,8 +19,12 @@ int main(){
 
     render::picture alist("../assets/tank/churchil_body.png");
     alist.set_as_alpha( render::color("#000000") );
+    static_cast<render::render_object*>(&alist)->draw();
 
     window.bind(&alist);
+
+    render::rect rects( render::color("#FF0000") , render::size(100, 100) , false);
+    window.bind(&rects);
 
     
 
@@ -34,6 +38,8 @@ int main(){
         if(key(VK_ESCAPE) or window.is_closed()){
             break;
         }
+
+        rects.draw( render::position(100, 100) );
 
         while(angle>360){
             angle -= 360;
