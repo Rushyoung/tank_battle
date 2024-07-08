@@ -22,8 +22,8 @@ include_directories(include)
 file(GLOB SOURCES "src/*.cpp")
 
 #find all of the hieasyx files
-set(EASYX_PATH "D:/code/module/hi_easyx")
-file(GLOB_RECURSE EASYX_FILES "${EASYX_PATH}/*.cpp")
+#set(EASYX_PATH "D:/code/module/hi_easyx")
+#file(GLOB_RECURSE EASYX_FILES "${EASYX_PATH}/*.cpp")
 
 # cancel the console startup logo
 add_definitions(-D_NO_START_ANIMATION_)

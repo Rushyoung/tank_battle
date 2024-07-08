@@ -13,6 +13,19 @@
 #define PI 3.14159265358979323846
 #define degree(x) ((x)*PI/180.0)
 
+/**
+ * @brief 画图函数, 用于绘制图片, 改善了原函数不能设置透明度、绘制透明图片的问题
+*/
+void placeimage(IMAGE* pSrcImage, int x, int y, double opacity=1.0, DWORD ingoreColor=0x000000);
+
+
+/**
+ * @brief 旋转图片函数, 用于优雅地旋转图片, 适用带有透明度的图片
+ * @warning 该函数会使图片变大，请不要在循环中使用
+*/
+void whirlimage(IMAGE *dstimg, IMAGE *srcimg, double radian, bool autosize = true);
+
+
 namespace render{
     /**
      * @brief RBG颜色类
@@ -174,6 +187,7 @@ namespace render{
         void resize(int, int);
         void rotate(double);
         void draw(int, int, DWORD=SRCCOPY);
+        void place(int, int, DWORD=0x000000);
     };
 
     /**
@@ -184,12 +198,18 @@ namespace render{
         base_image img;
         base_image img_alpha;
         bool is_alpha;
+        enum class alpha_mode{
+            mask_off,
+            ingore_color,
+        } alpha_scheme;
+        color ingore_color;
         double rotation;
     public:
         render_pic(std::string_view);
         void resize(int, int);
         void rotate(double);
         void set_as_alpha(std::string_view);
+        void set_as_alpha(color);
         void draw(int, int) override;
     };
     using picture = render_pic;
@@ -201,7 +221,6 @@ namespace render{
     class monitor: public std::shared_ptr<monitor>{
     private:
         bool key_state[256];
-        std::atomic<int> stop_msg_loop;
     public:
         monitor();
         ~monitor();
@@ -229,11 +248,11 @@ namespace render{
         ~window();
         void set_background(color);
     
-        int  add_render_object(render_object*);
-        const render_object* get_render_object(int);
-        void remove_render_object(int);
-        void enable_render_object(int);
-        void clear_render_object();
+        int  bind(render_object*);
+        render_object* get_bound(int);
+        void disable(int);
+        void enable(int);
+        void clear_all();
 
         void update();
 

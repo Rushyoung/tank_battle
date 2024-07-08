@@ -5,23 +5,31 @@
 #include <thread>
 #include <iostream>
 
-#define key inputs.key
-
+#define key GetAsyncKeyState
 
 int main(){
     render::window window(720, 720);
     render::monitor inputs;
     window.retitle("Render Test");
+
     render::FPS<60> fps;
-    render::rect block(render::color(255, 0, 0), render::size(10, 10), true);
+    
     render::picture back("../assets/image.jpg");
-    int backid = window.add_render_object(&back);
-    window.add_render_object(&block);
+    window.bind(&back);
 
     render::picture alist("../assets/tank/churchil_body.png");
-    alist.set_as_alpha("../assets/tank/churchil_body.mask.jpg");
+    alist.set_as_alpha( render::color("#000000") );
 
-    window.add_render_object(&alist);
+/*
+    render::picture alist("../assets/tank/churchil_body.png");
+    alist.set_as_alpha( render::color("#000000") );
+    alist.rotate(90);
+    alist.move(300, 300);;*/
+
+
+    window.bind(&alist);
+    
+
     
     double angle = 0;
 

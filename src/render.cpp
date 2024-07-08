@@ -221,6 +221,9 @@ namespace render{
     void base_image::draw(int x, int y, DWORD mode){
         putimage(x, y, &img_output, mode);
     }
+    void base_image::place(int x, int y, DWORD ignore){
+        placeimage(&img_output, x, y, 1.0, ignore);
+    }
 
     render_pic::render_pic(std::string_view path){
         img = base_image(path);
@@ -229,32 +232,42 @@ namespace render{
     }
     void render_pic::resize(int width, int height){
         img.resize(width, height);
-        if(is_alpha){
+        if(is_alpha && alpha_scheme == alpha_mode::mask_off){
             img_alpha.resize(width, height);
         }
     }
     void render_pic::rotate(double angle){
         rotation = angle;
         img.rotate(angle);
-        if(is_alpha){
+        if(is_alpha && alpha_scheme == alpha_mode::mask_off){
             img_alpha.rotate(angle);
         }
     }
     void render_pic::draw(int x, int y){
-        if(is_alpha){
+        if(!is_alpha){
+            img.draw(x, y);
+            return;
+        }
+        if(alpha_scheme == alpha_mode::mask_off){
             img_alpha.draw(x, y, SRCAND);
             img.draw(x, y, SRCPAINT);
-        } else {
-            img.draw(x, y);
+        }
+        if(alpha_scheme == alpha_mode::ingore_color){
+            img.place(-x, -y, ingore_color.get_color());
         }
     }
     void render_pic::set_as_alpha(std::string_view path){
-        img_alpha = base_image(path);
         is_alpha = true;
+        img_alpha = base_image(path);
+        alpha_scheme = alpha_mode::mask_off;
+    }
+    void render_pic::set_as_alpha(color color){
+        is_alpha = true;
+        ingore_color = color;
+        alpha_scheme = alpha_mode::ingore_color;
     }
 
-    monitor::monitor():
-    stop_msg_loop(std::atomic<int>(false)){
+    monitor::monitor(){
         memset(key_state, 0, sizeof(key_state));
         // in new thread to call message loop
         std::thread(&monitor::message_loop, this, std::ref(*this)).detach();
@@ -262,7 +275,6 @@ namespace render{
 
     monitor::~monitor(){
         std::cout<< "monitor destroyed\n";
-        stop_msg_loop = true;
     }
 
     bool monitor::key(int vkey){
@@ -285,9 +297,6 @@ namespace render{
         loop_start:
         while(peekmessage(&msg, EX_KEY, true)){
             key_state[msg.vkcode] = true;
-        }
-        if(stop_msg_loop){
-            return;
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
         goto loop_start;
@@ -316,19 +325,19 @@ namespace render{
         setbkcolor(bg_color.get_color());
         cleardevice();
     }
-    int window::add_render_object(render_object* obj){
+    int window::bind(render_object* obj){
         has_default = true;
         default_render_list.push_back(obj);
         enable_render_list .push_back(true);
         return default_render_list.size() - 1;
     }
-    const render_object* window::get_render_object(int index){
+    render_object* window::get_bound(const int index){
         return default_render_list[index];
     }
-    void window::remove_render_object(int index){
+    void window::disable(int index){
         enable_render_list[index] = false;
     }
-    void window::enable_render_object(int index){
+    void window::enable(int index){
         enable_render_list[index] = true;
     }
     void window::draw_default(){
@@ -341,7 +350,7 @@ namespace render{
             }
         }
     }
-    void window::clear_render_object(){
+    void window::clear_all(){
         default_render_list.clear();
         enable_render_list.clear();
     }
@@ -357,3 +366,58 @@ namespace render{
     }
 }
 
+
+
+// 绘图函数, 用于绘制带透明图层的图片
+void placeimage(IMAGE* pSrcImg, int x, int y, double opacity, DWORD ignoreColor){
+	// 变量初始化
+	DWORD* dst = GetImageBuffer();			// GetImageBuffer() 函数，用于获取绘图设备的显存指针
+    DWORD* src = GetImageBuffer(pSrcImg);	// 获取 picture 的显存指针
+	int imageWidth  = pSrcImg->getwidth();	// 获取图片宽度
+	int imageHeight = pSrcImg->getheight();	// 获取图片高度
+	int WindowWidth = getwidth();			// 获取窗口宽度
+	int WindowHeight = getheight();			// 获取窗口高度
+	int dstX = 0;							// 在 绘图区域 显存里像素的角标
+	int srcX = 0;							// 在 image 显存里像素的角标
+
+	// 实现透明贴图 公式： Cp=αp*FP+(1-αp)*BP ，贝叶斯定理来进行点颜色的概率计算
+    for (int iy = 0; iy < imageHeight; iy++){
+		for (int ix = 0; ix < imageWidth; ix++){
+			// 防止越界
+			if (ix + x >= 0 && ix + x < imageWidth && iy + x >= 0 && iy + y < imageHeight &&
+				ix + x >= 0 && ix + x < WindowWidth && iy + y >= 0 && iy + y < WindowHeight){
+				// 获取像素角标
+				srcX = (ix + x) + (iy + y) * imageWidth;
+				dstX = (ix + x) + (iy + y) * WindowWidth;
+
+				int sa = ((src[srcX] & 0xff000000) >> 24) * opacity;	// 0xAArrggbb;
+				if(sa == 0){
+                    sa = 255 * opacity;
+                    if(src[srcX] == ignoreColor){
+                        continue;
+                    }
+                }
+                int sr = ((src[srcX] & 0x00ff0000) >> 16);				// 获取 RGB 里的 R
+				int sg = ((src[srcX] & 0x0000ff00) >> 8);				// G
+				int sb = src[srcX] & 0xff;								// B
+
+				// 设置对应的绘图区域像素信息
+				int dr = ((dst[dstX] & 0xff0000) >> 16);
+				int dg = ((dst[dstX] & 0xff00) >> 8);
+				int db = dst[dstX] & 0xff;
+                putpixel(ix + x, iy + y,
+                    RGB(
+                        sr * sa / 255 + dr * (255 - sa) / 255, // 公式： Cp=αp*FP+(1-αp)*BP 
+                        sg * sa / 255 + dg * (255 - sa) / 255, // αp=sa/255 , FP=sr , BP=dr
+                        sb * sa / 255 + db * (255 - sa) / 255
+                    )
+                );
+			}
+		}
+	}
+}
+
+
+void whirlimage(IMAGE *dstimg, IMAGE *srcimg, double radian, bool autosize){
+    /* @todo */
+}
