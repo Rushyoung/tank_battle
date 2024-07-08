@@ -20,17 +20,10 @@ int main(){
     render::picture alist("../assets/tank/churchil_body.png");
     alist.set_as_alpha( render::color("#000000") );
 
-/*
-    render::picture alist("../assets/tank/churchil_body.png");
-    alist.set_as_alpha( render::color("#000000") );
-    alist.rotate(90);
-    alist.move(300, 300);;*/
-
-
     window.bind(&alist);
-    
 
     
+
     double angle = 0;
 
 	int count = 0;
@@ -40,6 +33,13 @@ int main(){
     while(true){
         if(key(VK_ESCAPE) or window.is_closed()){
             break;
+        }
+
+        while(angle>360){
+            angle -= 360;
+        }
+        while(angle<0){
+            angle += 360;
         }
 
         if(key('A')){
@@ -54,8 +54,8 @@ int main(){
         if(key('W')){
             //沿着角度移动, 初始方向为向右
             alist.move(
-                  3 * cos( degree(angle) ),
-                - 3 * sin( degree(angle) )
+                3 * cos( degree(angle) ),
+                -3 * sin( degree(angle) )
             );
         }
 

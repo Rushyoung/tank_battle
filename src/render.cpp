@@ -72,7 +72,7 @@ namespace render{
         y = 0;
     }
 
-    base_tuple::base_tuple(int x, int y){
+    base_tuple::base_tuple(double x, double y){
         this->x = x;
         this->y = y;
     }
@@ -85,7 +85,7 @@ namespace render{
         return base_tuple(x-pos.x, y-pos.y);
     }
 
-    void base_tuple::move(int x, int y){
+    void base_tuple::move(double x, double y){
         this->x += x;
         this->y += y;
     }
@@ -103,7 +103,7 @@ namespace render{
         this->move(pos.x, pos.y);
     }
 
-    void render_object::move(int x, int y){
+    void render_object::move(double x, double y){
         default_pos.move(x, y);
     }
 
@@ -384,10 +384,9 @@ void placeimage(IMAGE* pSrcImg, int x, int y, double opacity, DWORD ignoreColor)
     for (int iy = 0; iy < imageHeight; iy++){
 		for (int ix = 0; ix < imageWidth; ix++){
 			// 防止越界
-			if (ix + x >= 0 && ix + x < imageWidth && iy + x >= 0 && iy + y < imageHeight &&
-				ix + x >= 0 && ix + x < WindowWidth && iy + y >= 0 && iy + y < WindowHeight){
+			if (ix + x >= 0 && ix + x < WindowWidth && iy + y >= 0 && iy + y < WindowHeight){
 				// 获取像素角标
-				srcX = (ix + x) + (iy + y) * imageWidth;
+				srcX = ix + iy * imageWidth;
 				dstX = (ix + x) + (iy + y) * WindowWidth;
 
 				int sa = ((src[srcX] & 0xff000000) >> 24) * opacity;	// 0xAArrggbb;

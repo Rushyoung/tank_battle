@@ -48,12 +48,12 @@ namespace render{
      * @brief 位置类和尺寸类
     */
     struct base_tuple{
-        int x, y;
+        double x, y;
         base_tuple();
-        base_tuple(int, int);
+        base_tuple(double, double);
         base_tuple operator+(base_tuple);
         base_tuple operator-(base_tuple);
-        void move(int, int);
+        void move(double, double);
     };
     using position = base_tuple;
     using size = base_tuple;
@@ -90,7 +90,7 @@ namespace render{
         virtual void draw(position&) = 0;
         virtual void draw(int, int) = 0;
         virtual void move(position&) = 0;
-        virtual void move(int, int) = 0;
+        virtual void move(double, double) = 0;
     };
 
     class render_object: protected base_render_object{
@@ -99,7 +99,7 @@ namespace render{
         void draw() override;
         void draw(position&) override;
         void move(position&) override;
-        void move(int, int) override;
+        void move(double, double) override;
     };
 
     /**
