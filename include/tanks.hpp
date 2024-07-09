@@ -1,34 +1,49 @@
 #ifndef __TANKS_HPP__
 #define __TANKS_HPP__
 
+#include <render.hpp>
+#include <string_view>
+
 namespace tank{
-    class tank_base{
+    class tank_render{
     private:
-        double x, y;
+        render::picture body;
+        render::picture turret;
+        int body_rotate_angle;
+        int turret_rotate_angle;
     public:
-        tank_base(double, double);
-        virtual void move(double, double);
-        virtual void control();
+        tank_render();
+        void set(std::string_view);
+        void draw(render::position);
+        void draw(render::position, int, int);
+        render::picture& get_body();
+        render::picture& get_turret();
+    };
+
+    class tank_base: public render::drawable{
+    private:
+        tank_render __tank;
+    public:
+        tank_base();
+        virtual void control() = 0;
+        void draw(int, int) override;
     };
 
     class tank_local: public tank_base{
     public:
-        tank_local(double, double);
-        void move(double, double);
+        tank_local();
         void control();
     };
 
     class tank_remote: public tank_base{
     public:
-        tank_remote(double, double);
-        void move(double, double);
+        tank_remote();
         void control();
     };
 
     class tank_ai: public tank_base{
     public:
-        tank_ai(double, double);
-        void move(double, double);
+        tank_ai();
         void control();
     };
 }

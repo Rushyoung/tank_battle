@@ -253,7 +253,7 @@ namespace render{
             img.draw(x, y, SRCPAINT);
         }
         if(alpha_scheme == alpha_mode::ingore_color){
-            img.place(-x, -y, ingore_color.get_color());
+            img.place(x, y, ingore_color.get_color());
         }
     }
     void render_pic::set_as_alpha(std::string_view path){
@@ -265,41 +265,6 @@ namespace render{
         is_alpha = true;
         ingore_color = color;
         alpha_scheme = alpha_mode::ingore_color;
-    }
-
-    monitor::monitor(){
-        memset(key_state, 0, sizeof(key_state));
-        // in new thread to call message loop
-        std::thread(&monitor::message_loop, this, std::ref(*this)).detach();
-    }
-
-    monitor::~monitor(){
-        std::cout<< "monitor destroyed\n";
-    }
-
-    bool monitor::key(int vkey){
-        // get the keyboard message
-        ExMessage msg = {0};
-        while(peekmessage(&msg, EX_KEY, true)){
-            key_state[msg.vkcode] = true;
-        }
-        return key_state[vkey] > 0;
-    }
-
-    void monitor::clear(){
-        for(int i = 0; i < 256; i++){
-            key_state[i] = 0;
-        }
-    }
-
-    void monitor::message_loop(monitor &self){
-        ExMessage msg = {0};
-        loop_start:
-        while(peekmessage(&msg, EX_KEY, true)){
-            key_state[msg.vkcode] = true;
-        }
-        std::this_thread::sleep_for(std::chrono::milliseconds(1));
-        goto loop_start;
     }
 
     window::window(int width, int height){
@@ -325,13 +290,13 @@ namespace render{
         setbkcolor(bg_color.get_color());
         cleardevice();
     }
-    int window::bind(render_object* obj){
+    int window::bind(drawable* obj){
         has_default = true;
         default_render_list.push_back(obj);
         enable_render_list .push_back(true);
         return default_render_list.size() - 1;
     }
-    render_object* window::get_bound(const int index){
+    drawable* window::get_bound(const int index){
         return default_render_list[index];
     }
     void window::disable(int index){

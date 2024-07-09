@@ -102,10 +102,12 @@ namespace render{
         void move(double, double) override;
     };
 
+    using drawable = render_object;
+
     /**
      * @brief 文本渲染类，继承自渲染物体基类
     */
-    class render_text: public render_object{
+    class render_text: public drawable{
     private:
         std::string font;
         std::string text;
@@ -125,7 +127,7 @@ namespace render{
     /**
      * @brief 矩形渲染类，继承自渲染物体基类
     */
-    class render_rect: public render_object{
+    class render_rect: public drawable{
     private:
         color rect_color;
         size rect_size;
@@ -143,7 +145,7 @@ namespace render{
     /**
      * @brief 圆形渲染类，继承自渲染物体基类
     */
-    class render_circle: public render_object{
+    class render_circle: public drawable{
     private:
         color circle_color;
         double radius;
@@ -161,7 +163,7 @@ namespace render{
     /**
      * @brief 线段渲染类，继承自渲染物体基类
     */
-    class render_line: public render_object{
+    class render_line: public drawable{
     private:
         color line_color;
         int length;
@@ -197,7 +199,7 @@ namespace render{
     /**
      * @brief 图片渲染类，继承自渲染物体基类
     */
-    class render_pic: public render_object{
+    class render_pic: public drawable{
     protected:
         base_image img;
         base_image img_alpha;
@@ -218,22 +220,6 @@ namespace render{
         void draw(int, int) override;
     };
     using picture = render_pic;
-
-
-    /**
-     * @brief 消息检测类，继承自智能指针
-    */
-    class monitor: public std::shared_ptr<monitor>{
-    private:
-        bool key_state[256];
-    public:
-        monitor();
-        ~monitor();
-        void clear();
-        bool key(int);
-        void message_loop(monitor&);
-    };
-
     
     /**
      * @brief 窗口渲染类
@@ -253,8 +239,8 @@ namespace render{
         ~window();
         void set_background(color);
     
-        int  bind(render_object*);
-        render_object* get_bound(int);
+        int  bind(drawable*);
+        drawable* get_bound(int);
         void disable(int);
         void enable(int);
         void clear_all();

@@ -1,16 +1,23 @@
-#include "render.hpp"
 #include <windows.h>
 #include <cmath>
 #include <chrono>
 #include <thread>
 #include <iostream>
 
-#define key GetAsyncKeyState
+#include "render.hpp"
+#include "tanks.hpp"
+#include "monitor.hpp"
+
+enable_monitor_shared;
 
 int main(){
+    monitor_init(inputs);
+    monitor_share(inputs);
+
     render::window window(720, 720);
-    render::monitor inputs;
     window.retitle("Render Test");
+    
+    monitor_start(inputs);
 
     render::FPS<60> fps;
     
@@ -19,14 +26,11 @@ int main(){
 
     render::picture alist("../assets/tank/churchil_body.png");
     alist.set_as_alpha( render::color("#000000") );
-    static_cast<render::render_object*>(&alist)->draw();
-
     window.bind(&alist);
 
     render::rect rects( render::color("#FF0000") , render::size(100, 100) , false);
     window.bind(&rects);
 
-    
 
     double angle = 0;
 
@@ -35,11 +39,10 @@ int main(){
     
 
     while(true){
-        if(key(VK_ESCAPE) or window.is_closed()){
+        if(inputs.key(VK_ESCAPE) or window.is_closed()){
             break;
         }
 
-        rects.draw( render::position(100, 100) );
 
         while(angle>360){
             angle -= 360;
@@ -48,21 +51,26 @@ int main(){
             angle += 360;
         }
 
-        if(key('A')){
+        if(inputs.key('A')){
             angle += 3;
             alist.rotate(angle);
         }
-        if(key('D')){
+        if(inputs.key('D')){
             angle -= 3;
             alist.rotate(angle);
         }
 
-        if(key('W')){
+        if(inputs.key('W')){
             //沿着角度移动, 初始方向为向右
             alist.move(
                 3 * cos( degree(angle) ),
                 -3 * sin( degree(angle) )
             );
+        }
+
+        monitor::mouse_pos pos = inputs.mouse(mouse_token::left_down);
+        if(pos ISNT ZERO){
+            std::cout << "mouse position: " << pos.x << ", " << pos.y << std::endl;
         }
 
         if(window.is_closed()){
@@ -71,10 +79,9 @@ int main(){
 
         fps.wait();
         window.update();
-        inputs.clear();
         count ++;
         if(count == 60){
-            std::cout<< "a second passed\n";
+            //std::cout<< "a second passed\n";
             count = 0;
         }
     }
