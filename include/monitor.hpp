@@ -50,7 +50,7 @@ bool operator==(POINT, POINT);
 /**
  * @brief 宏定义，分享一个monitor对象
 */
-#define monitor_share(x) monitor_shared = &x
+#define monitor_share(x) monitor_shared = x
 
 
 /**
@@ -62,18 +62,18 @@ bool operator==(POINT, POINT);
 /**
  * @brief 宏定义，使用分享的monitor对象
 */
-#define monitor_used_as(x) monitor &x = *monitor_shared
+#define monitor_used_as(x) monitor *x = monitor_shared
 
 
 /**
  * @brief 宏定义，定义一个monitor对象
 */
-#define monitor_init(x) static monitor x
+#define monitor_init(x) static monitor *x = new monitor()
 
 /**
  * @brief 宏定义，启动新的线程以运行消息循环
 */
-#define monitor_start(x) std::thread( &monitor::message_loop, &x ).detach()
+#define monitor_start(x) std::thread( &monitor::message_loop, x ).detach()
 
 
 #endif

@@ -51,15 +51,36 @@ render::picture& tank_render::get_turret(){
     return turret;
 }
 
+
+/**
+ * @brief tank_base
+*/
 tank_base::tank_base():
     __tank()
-{}
+{
+    is_rotating = false;
+    is_end = false;
+}
+
+tank_base::~tank_base(){
+    is_end = true;
+}
 
 void tank_base::draw(int, int){
+    /*while(is_rotating){
+        std::this_thread::sleep_until( std::chrono::steady_clock::now() + std::chrono::milliseconds(2) );
+    }*/
     __tank.draw( default_pos );
 }
 
+void tank_base::end(){
+    is_end = true;
+}
 
+
+/**
+ * @brief tank_local
+*/
 tank_local::tank_local():
     tank_base()
 {}
@@ -68,7 +89,35 @@ void tank_local::control(){
     /**
      * @todo
     */
-    
+    render::FPS<60> fps;
+    monitor_used_as(inputs);
+    double angle = 0;
+
+
+    while(!is_end){
+        while(angle>360){
+            angle -= 360;
+        }
+        while(angle<0){
+            angle += 360;
+        }
+
+        if(inputs->key('A')){
+            printf("A\n");
+            angle += 3;
+            is_rotating = true;
+            __tank.get_body().rotate( angle );
+            is_rotating = false;
+        }
+        if(inputs->key('D')){
+            printf("D\n");
+            angle -= 3;
+            is_rotating = true;
+            __tank.get_body().rotate( angle );
+            is_rotating = false;
+        }
+        fps.wait();
+    }
 }
 
 }

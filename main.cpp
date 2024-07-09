@@ -26,10 +26,16 @@ int main(){
 
     render::picture alist("../assets/tank/churchil_body.png");
     alist.set_as_alpha( render::color("#000000") );
-    window.bind(&alist);
+    //window.bind(&alist);
 
     render::rect rects( render::color("#FF0000") , render::size(100, 100) , false);
     window.bind(&rects);
+
+    tank::tank_local tank_1;
+    window.bind(&tank_1);
+
+    std::thread tank_1_thread(&tank::tank_local::control, &tank_1);
+    
 
 
     double angle = 0;
@@ -39,10 +45,10 @@ int main(){
     
 
     while(true){
-        if(inputs.key(VK_ESCAPE) or window.is_closed()){
+        if(inputs->key(VK_ESCAPE) or window.is_closed()){
             break;
         }
-
+/*
 
         while(angle>360){
             angle -= 360;
@@ -51,41 +57,38 @@ int main(){
             angle += 360;
         }
 
-        if(inputs.key('A')){
+        if(inputs->key('A')){
             angle += 3;
-            alist.rotate(angle);
+            tank_1.__tank.get_body().rotate( angle );
         }
-        if(inputs.key('D')){
+        if(inputs->key('D')){
             angle -= 3;
-            alist.rotate(angle);
+            tank_1.__tank.get_body().rotate( angle );
         }
 
-        if(inputs.key('W')){
+        if(inputs->key('W')){
             //沿着角度移动, 初始方向为向右
             alist.move(
                 3 * cos( degree(angle) ),
                 -3 * sin( degree(angle) )
             );
-        }
+        }*/
 
-        monitor::mouse_pos pos = inputs.mouse(mouse_token::left_down);
+        monitor::mouse_pos pos = inputs->mouse(mouse_token::left_down);
         if(pos ISNT ZERO){
             std::cout << "mouse position: " << pos.x << ", " << pos.y << std::endl;
-        }
-
-        if(window.is_closed()){
-            break;
         }
 
         fps.wait();
         window.update();
         count ++;
         if(count == 60){
-            //std::cout<< "a second passed\n";
+            std::cout<< "a second passed\n";
             count = 0;
         }
     }
-    
+    tank_1.end();
+    //tank_1_thread.join();
 
     // closegraph();
     // 关闭easyx窗口

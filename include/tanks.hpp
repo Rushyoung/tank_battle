@@ -22,11 +22,16 @@ namespace tank{
 
     class tank_base: public render::drawable{
     private:
-        tank_render __tank;
+    protected:
+        bool is_end;
+        bool is_rotating;
     public:
+        tank_render __tank;
         tank_base();
+        ~tank_base();
         virtual void control() = 0;
         void draw(int, int) override;
+        void end();
     };
 
     class tank_local: public tank_base{
