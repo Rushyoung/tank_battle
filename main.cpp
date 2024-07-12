@@ -1,94 +1,120 @@
-#include <windows.h>
-#include <cmath>
 #include <chrono>
 #include <thread>
+
 #include <iostream>
+
+#include <string>
+#include <vector>
+#include <map>
 
 #include "render.hpp"
 #include "tanks.hpp"
 #include "monitor.hpp"
+#include "channel.hpp"
+
+#define var auto&
+#define elif else if
+#define in :
+
+#define time_point std::chrono::steady_clock::time_point
+#define get_now std::chrono::steady_clock::now
 
 enable_monitor_shared;
+
+void local_control(){
+    render::FPS<55> fps;
+    monitor_used_as(inputs);
+    std::string cmd;
+    while(true){
+        cmd.clear();
+        if(inputs->key('W')){
+            cmd.append("W");
+        } elif (inputs->key('S')){
+            cmd.append("S");
+        }
+        if(inputs->key('A')){
+            cmd.append("A");
+        } elif (inputs->key('D')){
+            cmd.append("D");
+        }
+
+        if(cmd.empty()){
+            cmd.append("V");
+        }
+        chan("local").send(cmd);
+        fps.wait();
+    }
+}
 
 int main(){
     monitor_init(inputs);
     monitor_share(inputs);
 
     render::window window(720, 720);
-    window.retitle("Render Test");
+    window.retitle("tank game");
+    window.set_background(render::color("#FFFFFF"));
     
     monitor_start(inputs);
 
     render::FPS<60> fps;
-    
-    render::picture back("../assets/image.jpg");
-    window.bind(&back);
-
-    render::picture alist("../assets/tank/churchil_body.png");
-    alist.set_as_alpha( render::color("#000000") );
-    //window.bind(&alist);
-
-    render::rect rects( render::color("#FF0000") , render::size(100, 100) , false);
-    window.bind(&rects);
-
-    tank::tank_local tank_1;
-    window.bind(&tank_1);
-
-    std::thread tank_1_thread(&tank::tank_local::control, &tank_1);
-    
-
-
-    double angle = 0;
 
 	int count = 0;
-	std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
+	time_point start = get_now();
     
+    std::vector<std::string> tank_running_list = {"local"};
+    std::map<std::string, tank_render> tanks;
+    for(auto& name: tank_running_list){
+        tanks[name] = tank_render("churchil");
+        window.bind(&tanks[name]);
+    }
+
+    render::picture alist("../assets/alist_ico.png");
+    alist.set_as_alpha(render::color("#000000"));
+    window.bind(&alist);
+    
+    std::thread local_thread(local_control);
 
     while(true){
         if(inputs->key(VK_ESCAPE) or window.is_closed()){
             break;
         }
-/*
 
-        while(angle>360){
-            angle -= 360;
-        }
-        while(angle<0){
-            angle += 360;
-        }
-
-        if(inputs->key('A')){
-            angle += 3;
-            tank_1.__tank.get_body().rotate( angle );
-        }
-        if(inputs->key('D')){
-            angle -= 3;
-            tank_1.__tank.get_body().rotate( angle );
-        }
-
-        if(inputs->key('W')){
-            //沿着角度移动, 初始方向为向右
-            alist.move(
-                3 * cos( degree(angle) ),
-                -3 * sin( degree(angle) )
-            );
-        }*/
-
-        monitor::mouse_pos pos = inputs->mouse(mouse_token::left_down);
-        if(pos ISNT ZERO){
-            std::cout << "mouse position: " << pos.x << ", " << pos.y << std::endl;
+        for(var name in tank_running_list){
+            std::string cmd_str = chan(name).recv();
+            for(var cmd in cmd_str){
+                switch(cmd){
+                    case 'W':
+                        tanks[name].forward( 5);
+                        break;
+                    case 'S':
+                        tanks[name].forward(-3);
+                        break;
+                    case 'A':
+                        tanks[name].rotate_body( 3);
+                        break;
+                    case 'D':
+                        tanks[name].rotate_body(-3);
+                        break;
+                    case 'V':
+                        [[fallthrough]];
+                    default:
+                        break;
+                }
+            }
         }
 
         fps.wait();
         window.update();
         count ++;
         if(count == 60){
-            std::cout<< "a second passed\n";
+            time_point end = get_now();
+            std::chrono::duration<double> diff = end - start;
+            std::cout << "[log] A second pass, and fps is " << count / diff.count() << "\n";
             count = 0;
+            start = end;
         }
     }
-    tank_1.end();
-    //tank_1_thread.join();
+    
 
     // closegraph();
     // 关闭easyx窗口

@@ -1,5 +1,6 @@
-#ifndef __CHANNEL_CPP__
-#define __CHANNEL_CPP__
+#pragma once
+#ifndef __CHANNEL_HPP__
+#define __CHANNEL_HPP__
 
 #include <queue>
 #include <map>
@@ -17,6 +18,7 @@ struct chan_message {
     chan_message() {};
 };
 
+
 using channel_map = std::map<std::string, std::shared_ptr<chan_message>>;
 
 class chan {
@@ -26,9 +28,9 @@ private:
 public:
     chan(const std::string&);
     void send(const std::string&);
-    std::string receive();
+    std::string recv();
     std::string receive_safe();
 };
-channel_map chan::msg_set = {};
+inline channel_map chan::msg_set = channel_map();
 
 #endif

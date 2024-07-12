@@ -3,16 +3,17 @@
 #endif
 
 #include "render.hpp"
-#include "monitor.hpp"
+#include "channel.hpp"
+
+#include <cmath>
 #include <string>
+#include <format>
 
-monitor_used;
 
-namespace tank{
     
-tank_render::tank_render():
-    body("../assets/tank/churchil_body.png"),
-    turret("../assets/tank/churchil_turret.png")
+tank_render::tank_render( std::string_view name):
+    body( std::format("../assets/tank/{}_body.png", name) ),
+    turret( std::format("../assets/tank/{}_turret.png", name) )
 {
     body  .set_as_alpha( render::color("#000000") );
     turret.set_as_alpha( render::color("#000000") );
@@ -20,27 +21,9 @@ tank_render::tank_render():
     turret_rotate_angle = 0;
 }
 
-void tank_render::set(std::string_view name){
-    /**
-     * @todo
-    */
-}
-
-void tank_render::draw(render::position pos){
-    body  .draw(pos);
-    turret.draw(pos);
-}
-
-void tank_render::draw(render::position pos, int body_angle, int turret_angle){
-    if(body_angle != body_rotate_angle){
-        body.rotate( degree(body_angle-body_rotate_angle) );
-        body_rotate_angle = body_angle;
-    }
-    if(turret_angle != turret_rotate_angle){
-        turret.rotate( degree(turret_angle-turret_rotate_angle) );
-        turret_rotate_angle = turret_angle;
-    }
-    draw(pos);
+void tank_render::draw(int x, int y){
+    body  .draw();
+    turret.draw();
 }
 
 render::picture& tank_render::get_body(){
@@ -52,72 +35,26 @@ render::picture& tank_render::get_turret(){
 }
 
 
-/**
- * @brief tank_base
-*/
-tank_base::tank_base():
-    __tank()
-{
-    is_rotating = false;
-    is_end = false;
+void tank_render::rotate_body(int angle){
+    body_rotate_angle += angle;
+    body_rotate_angle %= 360;
+    body.rotate( body_rotate_angle );
 }
 
-tank_base::~tank_base(){
-    is_end = true;
+void tank_render::rotate_turret(int angle){
+    turret_rotate_angle += angle;
+    turret_rotate_angle %= 360;
+    turret.rotate( turret_rotate_angle );
 }
 
-void tank_base::draw(int, int){
-    /*while(is_rotating){
-        std::this_thread::sleep_until( std::chrono::steady_clock::now() + std::chrono::milliseconds(2) );
-    }*/
-    __tank.draw( default_pos );
-}
-
-void tank_base::end(){
-    is_end = true;
-}
-
-
-/**
- * @brief tank_local
-*/
-tank_local::tank_local():
-    tank_base()
-{}
-
-void tank_local::control(){
-    /**
-     * @todo
-    */
-    render::FPS<60> fps;
-    monitor_used_as(inputs);
-    double angle = 0;
-
-
-    while(!is_end){
-        while(angle>360){
-            angle -= 360;
-        }
-        while(angle<0){
-            angle += 360;
-        }
-
-        if(inputs->key('A')){
-            printf("A\n");
-            angle += 3;
-            is_rotating = true;
-            __tank.get_body().rotate( angle );
-            is_rotating = false;
-        }
-        if(inputs->key('D')){
-            printf("D\n");
-            angle -= 3;
-            is_rotating = true;
-            __tank.get_body().rotate( angle );
-            is_rotating = false;
-        }
-        fps.wait();
-    }
-}
-
+void tank_render::forward(int distance){
+    body.move(
+        // 角度轉弧度
+         distance * std::cos( degree(body_rotate_angle) ),
+        -distance * std::sin( degree(body_rotate_angle) )
+    );
+    turret.move(
+         distance * std::cos( degree( body_rotate_angle ) ),
+        -distance * std::sin( degree( body_rotate_angle ) )
+    );
 }

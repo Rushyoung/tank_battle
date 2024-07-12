@@ -8,7 +8,6 @@
 
 #include <mutex>
 #include <condition_variable>
-#include <memory>
 
 
 chan::chan(const std::string& name){
@@ -29,7 +28,7 @@ void chan::send(const std::string& message) {
 }
 
 
-std::string chan::receive() {
+std::string chan::recv() {
     std::lock_guard<std::mutex> lock(msg->lock);
     if (msg->messages.empty()) {
         return "";
