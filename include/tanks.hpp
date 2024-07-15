@@ -16,6 +16,9 @@ public:
 
     render::picture& get_body();
     render::picture& get_turret();
+    int              get_turret_angle();
+    render::position get_position();
+
     void rotate_body(int);
     void rotate_turret(int);
     void forward(int);
